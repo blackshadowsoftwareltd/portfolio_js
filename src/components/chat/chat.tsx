@@ -18,7 +18,7 @@ import {
 import WelcomeModal from '@/components/welcome-modal';
 import { Info } from 'lucide-react';
 import GitHubButton from 'react-github-btn';
-import HelperBoost from './HelperBoost';
+// import HelperBoost from './HelperBoost';
 
 // ClientOnly component for client-side rendering
 //@ts-ignore
@@ -384,7 +384,7 @@ const Chat = () => {
         {/* Fixed Bottom Bar */}
         <div className="sticky bottom-0 bg-white px-2 pt-3 md:px-0 md:pb-4">
           <div className="relative flex flex-col items-center gap-3">
-            <HelperBoost submitQuery={submitQuery} setInput={setInput} />
+            {/* <HelperBoost submitQuery={submitQuery} setInput={setInput} /> */}
             <ChatBottombar
               input={input}
               handleInputChange={handleInputChange}

@@ -1,0 +1,72 @@
+
+> portfolio.com@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.2.3
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.105:3000
+
+ ✓ Starting...
+ ✓ Ready in 1155ms
+ ○ Compiling / ...
+ ✓ Compiled / in 3.1s (1708 modules)
+ HEAD / 200 in 3311ms
+ ✓ Compiled in 257ms (808 modules)
+ ⚠ The "images.domains" configuration is deprecated. Please use "images.remotePatterns" configuration instead.
+ GET / 200 in 81ms
+ GET / 200 in 33ms
+ ○ Compiling /chat ...
+ ✓ Compiled /chat in 1601ms (2498 modules)
+ GET /chat?query=What+are+your+projects%3F+What+are+you+working+on+right+now%3F 200 in 1734ms
+ GET /chat?query=Who+are+you%3F+I+want+to+know+more+about+you. 200 in 14ms
+ ○ Compiling /api/chat ...
+ ✓ Compiled /api/chat in 852ms (2562 modules)
+[CHAT-API] Incoming messages: [
+  {
+    role: 'user',
+    content: 'Who are you? I want to know more about you.',
+    parts: [ [Object] ]
+  }
+]
+[CHAT-API] Incoming messages: [
+  {
+    role: 'user',
+    content: 'Who are you? I want to know more about you.',
+    parts: [ [Object] ]
+  }
+]
+ POST /api/chat 200 in 964ms
+ POST /api/chat 200 in 969ms
+ GET / 200 in 135ms
+ GET /chat?query=What+are+your+skills%3F+Give+me+a+list+of+your+soft+and+hard+skills. 200 in 18ms
+[CHAT-API] Incoming messages: [
+  {
+    role: 'user',
+    content: 'What are your skills? Give me a list of your soft and hard skills.',
+    parts: [ [Object] ]
+  }
+]
+ POST /api/chat 200 in 4ms
+[CHAT-API] Incoming messages: [
+  {
+    role: 'user',
+    content: 'What are your skills? Give me a list of your soft and hard skills.',
+    parts: [ [Object] ]
+  }
+]
+ POST /api/chat 200 in 7ms
+[CHAT-API] Incoming messages: [
+  {
+    role: 'user',
+    content: 'What are your skills? Give me a list of your soft and hard skills.',
+    parts: [ [Object] ]
+  },
+  {
+    role: 'user',
+    content: 'Who are you? I want to know more about you.',
+    parts: [ [Object] ]
+  }
+]
+ POST /api/chat 200 in 6ms
+ GET / 200 in 54ms
+[?25h

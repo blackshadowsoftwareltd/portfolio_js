@@ -84,17 +84,17 @@ export default function Home() {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pb-10 md:pb-20">
       {/* big blurred footer word */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center overflow-hidden">
+      {/* <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center overflow-hidden">
         <div
           className="hidden bg-gradient-to-b from-neutral-500/10 to-neutral-500/0 bg-clip-text text-[10rem] leading-none font-black text-transparent select-none sm:block lg:text-[16rem]"
           style={{ marginBottom: '-2.5rem' }}
         >
           Toukoum
         </div>
-      </div>
+      </div> */}
 
       {/* GitHub button */}
-      <div className="absolute top-6 right-8 z-20">
+      {/* <div className="absolute top-6 right-8 z-20">
         <GitHubButton
           href="https://github.com/toukoum/portfolio"
           data-color-scheme="no-preference: light; light: light; dark: light_high_contrast;"
@@ -104,24 +104,23 @@ export default function Home() {
         >
           Star
         </GitHubButton>
-      </div>
+      </div> */}
 
-      <div className="absolute top-6 left-6 z-20">
+      {/* <div className="absolute top-6 left-6 z-20">
         <button
           onClick={() => goToChat('Are you looking for an internship?')}
           className="cursor-pointer relative flex items-center gap-2 rounded-full border bg-white/30 px-4 py-1.5 text-sm font-medium text-black shadow-md backdrop-blur-lg transition hover:bg-white/60 dark:border-white dark:text-white dark:hover:bg-neutral-800"
         >
-          {/* Green pulse dot */}
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
             <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
           </span>
           need an intern?
         </button>
-      </div>
+      </div> */}
 
       {/* header */}
-      <motion.div
+      {/* <motion.div
         className="z-1 mb-8 flex flex-col items-center text-center md:mb-12 mt-24 md:mt-4"
         variants={topElementVariants}
         initial="hidden"
@@ -137,10 +136,10 @@ export default function Home() {
         <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">
           AI portfolio
         </h1>
-      </motion.div>
+      </motion.div> */}
 
       {/* centre memoji */}
-      <div className="relative z-10 h-52 w-48 overflow-hidden sm:h-72 sm:w-72">
+      {/* <div className="relative z-10 h-52 w-48 overflow-hidden sm:h-72 sm:w-72">
         <Image
           src="/landing-memojis.png"
           alt="Hero memoji"
@@ -149,16 +148,15 @@ export default function Home() {
           priority
           className="translate-y-14 scale-[2] object-cover"
         />
-      </div>
+      </div> */}
 
       {/* input + quick buttons */}
-      <motion.div
+      {/* <motion.div
         variants={bottomElementVariants}
         initial="hidden"
         animate="visible"
         className="z-10 mt-4 flex w-full flex-col items-center justify-center md:px-0"
       >
-        {/* free-form question */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -186,7 +184,6 @@ export default function Home() {
           </div>
         </form>
 
-        {/* quick-question grid */}
         <div className="mt-4 grid w-full max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3 md:grid-cols-5">
           {questionConfig.map(({ key, color, icon: Icon }) => (
             <Button
@@ -202,7 +199,7 @@ export default function Home() {
             </Button>
           ))}
         </div>
-      </motion.div>
+      </motion.div> */}
       <FluidCursor />
     </div>
   );
