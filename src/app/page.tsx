@@ -1,6 +1,7 @@
 'use client';
 
 import FluidCursor from '@/components/FluidCursor';
+import GitHubContributions from '@/components/github-contributions';
 import { Button } from '@/components/ui/button';
 import WelcomeModal from '@/components/welcome-modal';
 import { motion } from 'framer-motion';
@@ -200,6 +201,12 @@ export default function Home() {
           ))}
         </div>
       </motion.div> */}
+      
+      {/* GitHub Contributions Graph */}
+      <div className="fixed bottom-0 left-0 right-0 z-10 p-4">
+        <GitHubContributions />
+      </div>
+      
       <FluidCursor />
     </div>
   );
