@@ -2,6 +2,7 @@
 
 import FluidCursor from '@/components/FluidCursor';
 import GitHubContributions from '@/components/github-contributions';
+import LiquidGlassButton from '@/components/liquid-glass-button';
 import { Button } from '@/components/ui/button';
 import WelcomeModal from '@/components/welcome-modal';
 import { motion } from 'framer-motion';
@@ -202,9 +203,15 @@ export default function Home() {
         </div>
       </motion.div> */}
       
+      {/* Liquid Glass Home Button */}
+      <LiquidGlassButton />
+      
       {/* GitHub Contributions Graph */}
-      <div className="fixed bottom-0 left-0 right-0 z-10 p-4">
-        <GitHubContributions />
+      <div className="fixed left-0 right-0 z-10 transform translate-y-[70%]" 
+           style={{ bottom: '12px' }}>
+        <div className="p-4">
+          <GitHubContributions />
+        </div>
       </div>
       
       <FluidCursor />

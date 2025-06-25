@@ -146,7 +146,7 @@ export default function GitHubContributions() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="w-fit max-w-4xl mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30"
+      className="w-fit max-w-4xl mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30 hover:translate-y-[-70%] transition-transform duration-500 ease-in-out will-change-transform"
     >
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
