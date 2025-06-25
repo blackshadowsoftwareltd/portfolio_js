@@ -99,14 +99,8 @@ async function fetchContributionsWithoutToken(username: string) {
     
     // Transform the data to match our expected format
     const transformedData = {
-      totalContributions: data.total?.lastYear || 0,
-      weeks: data.contributions?.map((week: any) => ({
-        contributionDays: week.map((day: any) => ({
-          contributionCount: day.count,
-          date: day.date,
-          color: getContributionColor(day.count),
-        }))
-      })) || []
+      totalContributions: data.total?.[new Date().getFullYear()] || 0,
+      weeks: transformContributionsToWeeks(data.contributions || [])
     };
 
     return NextResponse.json(transformedData);
@@ -125,6 +119,50 @@ function getContributionColor(count: number): string {
   if (count <= 6) return '#40c463';
   if (count <= 9) return '#30a14e';
   return '#216e39';
+}
+
+function transformContributionsToWeeks(contributions: any[]) {
+  const weeks = [];
+  const today = new Date();
+  const oneYearAgo = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+  
+  // Filter contributions to last year only
+  const yearContributions = contributions.filter((contrib: any) => {
+    const contribDate = new Date(contrib.date);
+    return contribDate >= oneYearAgo && contribDate <= today;
+  });
+
+  // Group by weeks starting from Sunday
+  const firstSunday = new Date(oneYearAgo);
+  firstSunday.setDate(oneYearAgo.getDate() - oneYearAgo.getDay());
+  
+  let currentDate = new Date(firstSunday);
+  
+  while (currentDate <= today) {
+    const week = [];
+    
+    for (let day = 0; day < 7; day++) {
+      if (currentDate <= today) {
+        const dateString = currentDate.toISOString().split('T')[0];
+        const contrib = yearContributions.find((c: any) => c.date === dateString);
+        const count = contrib ? contrib.count : 0;
+        
+        week.push({
+          contributionCount: count,
+          date: dateString,
+          color: getContributionColor(count),
+        });
+      }
+      
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    if (week.length > 0) {
+      weeks.push({ contributionDays: week });
+    }
+  }
+
+  return weeks;
 }
 
 function generateMockContributions() {
