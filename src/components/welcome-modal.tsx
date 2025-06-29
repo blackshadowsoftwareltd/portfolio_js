@@ -31,7 +31,7 @@ export default function WelcomeModal({ trigger }: WelcomeModalProps) {
       onClick={() => setIsOpen(true)}
     >
       <Image
-        src="/logo-toukoum.svg"
+        src="/blackshadow.svg"
         width={100}
         height={100}
         alt="Logo"
