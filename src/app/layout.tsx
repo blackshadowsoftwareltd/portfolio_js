@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Toukoum Portfolio",
+  title: "Remon Ahammad",
   description: "Interactive portfolio with an AI-powered Memoji that answers questions about me, my skills, and my experience",
   keywords: [
     "Toukoum", 
@@ -38,13 +38,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://toukoum.fr",
-    title: "Toukoum Portfolio",
+    title: "Remon Ahammad",
     description: "Interactive portfolio with an AI-powered Memoji that answers questions about me",
-    siteName: "Toukoum Portfolio",
+    siteName: "Remon Ahammad",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Toukoum Portfolio",
+    title: "Remon Ahammad",
     description: "Interactive portfolio with an AI-powered Memoji that answers questions about me",
     creator: "@toukoum",
   },

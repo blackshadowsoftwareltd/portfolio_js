@@ -207,7 +207,7 @@ export default function Home() {
       <LiquidGlassButton />
       
       {/* GitHub Contributions Graph */}
-      <div className="fixed left-0 right-0 z-10 transform translate-y-[70%]" 
+      <div className="fixed left-0 right-0 z-10 transform translate-y-[75%]" 
            style={{ bottom: '12px' }}>
         <div className="p-4">
           <GitHubContributions />
