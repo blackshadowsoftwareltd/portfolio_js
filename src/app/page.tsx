@@ -3,6 +3,7 @@
 import FluidCursor from '@/components/FluidCursor';
 import GitHubContributions from '@/components/github-contributions';
 import LiquidGlassButton from '@/components/liquid-glass-button';
+import PopularRepositories from '@/components/popular-repositories';
 import { Button } from '@/components/ui/button';
 import WelcomeModal from '@/components/welcome-modal';
 import { motion } from 'framer-motion';
@@ -13,6 +14,7 @@ import {
   Layers,
   PartyPopper,
   UserRoundSearch,
+  FolderGit2,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -40,6 +42,7 @@ const questionConfig = [
 /* ---------- component ---------- */
 export default function Home() {
   const [input, setInput] = useState('');
+  const [showRepositories, setShowRepositories] = useState(false);
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -206,13 +209,155 @@ export default function Home() {
       {/* Liquid Glass Home Button */}
       <LiquidGlassButton />
       
-      {/* GitHub Contributions Graph */}
+      {/* Repositories Toggle Button */}
+      <motion.button
+        onClick={() => setShowRepositories(!showRepositories)}
+        className="group fixed top-4 right-4 z-50 w-12 h-12 rounded-2xl overflow-hidden"
+        style={{
+          background: `
+            linear-gradient(135deg, 
+              rgba(255, 255, 255, 0.25) 0%,
+              rgba(255, 255, 255, 0.10) 25%,
+              rgba(255, 255, 255, 0.05) 50%,
+              rgba(255, 255, 255, 0.10) 75%,
+              rgba(255, 255, 255, 0.25) 100%
+            )
+          `,
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: `
+            0 8px 32px rgba(0, 0, 0, 0.12),
+            0 2px 8px rgba(0, 0, 0, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.1)
+          `,
+        }}
+        whileHover={{
+          scale: 1.05,
+          boxShadow: `
+            0 12px 40px rgba(0, 0, 0, 0.15),
+            0 4px 12px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.15)
+          `,
+        }}
+        whileTap={{
+          scale: 0.95,
+          boxShadow: `
+            0 4px 16px rgba(0, 0, 0, 0.1),
+            0 1px 4px rgba(0, 0, 0, 0.06),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.05)
+          `,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 400,
+          damping: 30
+        }}
+      >
+        <motion.div
+          className="absolute inset-0 opacity-0 group-hover:opacity-100"
+          style={{
+            background: `
+              radial-gradient(circle at 30% 30%, 
+                rgba(255, 255, 255, 0.6) 0%,
+                rgba(255, 255, 255, 0.2) 40%,
+                transparent 70%
+              )
+            `,
+          }}
+          animate={{
+            background: [
+              `radial-gradient(circle at 30% 30%, 
+                rgba(255, 255, 255, 0.6) 0%,
+                rgba(255, 255, 255, 0.2) 40%,
+                transparent 70%
+              )`,
+              `radial-gradient(circle at 70% 70%, 
+                rgba(255, 255, 255, 0.6) 0%,
+                rgba(255, 255, 255, 0.2) 40%,
+                transparent 70%
+              )`,
+              `radial-gradient(circle at 30% 30%, 
+                rgba(255, 255, 255, 0.6) 0%,
+                rgba(255, 255, 255, 0.2) 40%,
+                transparent 70%
+              )`
+            ]
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <div className="relative z-10 w-full h-full flex items-center justify-center">
+          <motion.div
+            animate={{ rotate: showRepositories ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <FolderGit2 
+              size={20} 
+              className="text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors duration-200"
+              strokeWidth={1.5}
+            />
+          </motion.div>
+        </div>
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            background: `
+              linear-gradient(135deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.3) 20%,
+                rgba(255, 255, 255, 0.1) 40%,
+                transparent 60%,
+                rgba(255, 255, 255, 0.1) 80%,
+                transparent 100%
+              )
+            `,
+          }}
+        />
+      </motion.button>
+      
+      {/* GitHub Cards Container */}
       <div className="fixed left-0 right-0 z-10 transform translate-y-[75%]" 
            style={{ bottom: '12px' }}>
-        <div className="p-4">
+        <div className="p-4 flex gap-4 justify-center items-end max-w-7xl mx-auto">
           <GitHubContributions />
         </div>
       </div>
+      
+      {/* PopularRepositories Slide Panel */}
+      <motion.div
+        className="fixed top-[71px] right-4 z-40"
+        initial={{ x: '100vw' }}
+        animate={{ x: showRepositories ? '0%' : '100vw' }}
+        transition={{
+          type: 'spring',
+          stiffness: 400,
+          damping: 30,
+          duration: 0.6
+        }}
+      >
+        <div className="w-96">
+          <PopularRepositories />
+        </div>
+      </motion.div>
+      
+      {/* Backdrop */}
+      {showRepositories && (
+        <motion.div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          onClick={() => setShowRepositories(false)}
+        />
+      )}
       
       <FluidCursor />
     </div>
