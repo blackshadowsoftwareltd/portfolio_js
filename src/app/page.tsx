@@ -4,6 +4,7 @@ import FluidCursor from '@/components/FluidCursor';
 import GitHubContributions from '@/components/github-contributions';
 import LiquidGlassButton from '@/components/liquid-glass-button';
 import PopularRepositories from '@/components/popular-repositories';
+import TerminalTyping from '@/components/terminal-typing';
 import { Button } from '@/components/ui/button';
 import WelcomeModal from '@/components/welcome-modal';
 import { motion } from 'framer-motion';
@@ -208,6 +209,9 @@ export default function Home() {
       
       {/* Liquid Glass Home Button */}
       <LiquidGlassButton />
+      
+      {/* Terminal Typing Animation */}
+      <TerminalTyping name="Rimon Ahammad" />
       
       {/* Repositories Toggle Button */}
       <motion.button
