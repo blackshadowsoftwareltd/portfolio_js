@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 const GITHUB_GRAPHQL_ENDPOINT = 'https://api.github.com/graphql';
 
 const POPULAR_REPOS_QUERY = `
-  query($username: String!) {
+  query($username: String!, $orderBy: RepositoryOrderField!, $direction: OrderDirection!) {
     user(login: $username) {
-      repositories(first: 8, orderBy: {field: STARGAZERS, direction: DESC}, privacy: PUBLIC) {
+      repositories(first: 8, orderBy: {field: $orderBy, direction: $direction}, privacy: PUBLIC) {
         nodes {
           name
           description
@@ -26,7 +26,7 @@ const POPULAR_REPOS_QUERY = `
 
 export async function POST(request: NextRequest) {
   try {
-    const { username } = await request.json();
+    const { username, sortBy = 'stars' } = await request.json();
 
     if (!username) {
       return NextResponse.json(
@@ -35,12 +35,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Map sortBy to GraphQL field and direction
+    const getSortConfig = (sortBy: string) => {
+      switch (sortBy) {
+        case 'stars':
+          return { orderBy: 'STARGAZERS', direction: 'DESC' };
+        case 'updated':
+          return { orderBy: 'UPDATED_AT', direction: 'DESC' };
+        case 'created':
+          return { orderBy: 'CREATED_AT', direction: 'DESC' };
+        default:
+          return { orderBy: 'STARGAZERS', direction: 'DESC' };
+      }
+    };
+
+    const { orderBy, direction } = getSortConfig(sortBy);
+
     // Check if we have a GitHub token in environment variables
     const githubToken = process.env.GITHUB_TOKEN;
     
     if (!githubToken) {
       // If no token, try to fetch from GitHub's REST API as fallback
-      return await fetchRepositoriesWithoutToken(username);
+      return await fetchRepositoriesWithoutToken(username, sortBy);
     }
 
     const response = await fetch(GITHUB_GRAPHQL_ENDPOINT, {
@@ -51,7 +67,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         query: POPULAR_REPOS_QUERY,
-        variables: { username },
+        variables: { username, orderBy, direction },
       }),
     });
 
@@ -71,7 +87,21 @@ export async function POST(request: NextRequest) {
       throw new Error('User not found or repositories data unavailable');
     }
 
-    return NextResponse.json({ repositories });
+    // Apply client-side sorting to ensure correct order (even for GraphQL)
+    const sortedRepos = repositories.sort((a: any, b: any) => {
+      switch (sortBy) {
+        case 'stars':
+          return b.stargazerCount - a.stargazerCount;
+        case 'updated':
+          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+        case 'created':
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        default:
+          return b.stargazerCount - a.stargazerCount;
+      }
+    });
+
+    return NextResponse.json({ repositories: sortedRepos });
   } catch (error) {
     console.error('Error fetching popular repositories:', error);
     return NextResponse.json(
@@ -82,10 +112,26 @@ export async function POST(request: NextRequest) {
 }
 
 // Fallback function when no GitHub token is available
-async function fetchRepositoriesWithoutToken(username: string) {
+async function fetchRepositoriesWithoutToken(username: string, sortBy: string = 'stars') {
   try {
+    // Map sortBy to REST API parameters
+    const getRestSortConfig = (sortBy: string) => {
+      switch (sortBy) {
+        case 'stars':
+          return { sort: 'stars', direction: 'desc' };
+        case 'updated':
+          return { sort: 'updated', direction: 'desc' };
+        case 'created':
+          return { sort: 'created', direction: 'desc' };
+        default:
+          return { sort: 'stars', direction: 'desc' };
+      }
+    };
+
+    const { sort, direction } = getRestSortConfig(sortBy);
+    
     // Use GitHub's REST API which has higher rate limits for public data
-    const restApiUrl = `https://api.github.com/users/${username}/repos?sort=stars&direction=desc&per_page=8&type=public`;
+    const restApiUrl = `https://api.github.com/users/${username}/repos?sort=${sort}&direction=${direction}&per_page=8&type=public`;
     
     const response = await fetch(restApiUrl, {
       headers: {
@@ -101,7 +147,16 @@ async function fetchRepositoriesWithoutToken(username: string) {
     const repositories = await response.json();
     
     // Transform the data to match our expected format
-    const transformedRepos = repositories.map((repo: any) => ({
+    const transformedRepos = repositories.map((repo: { 
+      name: string; 
+      description: string; 
+      stargazers_count: number; 
+      forks_count: number; 
+      language: string | null; 
+      html_url: string; 
+      created_at: string; 
+      updated_at: string; 
+    }) => ({
       name: repo.name,
       description: repo.description,
       stargazerCount: repo.stargazers_count,
@@ -115,7 +170,21 @@ async function fetchRepositoriesWithoutToken(username: string) {
       updatedAt: repo.updated_at,
     }));
 
-    return NextResponse.json({ repositories: transformedRepos });
+    // Apply client-side sorting to ensure correct order (GitHub API sorting might not be reliable)
+    const sortedRepos = transformedRepos.sort((a, b) => {
+      switch (sortBy) {
+        case 'stars':
+          return b.stargazerCount - a.stargazerCount;
+        case 'updated':
+          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+        case 'created':
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        default:
+          return b.stargazerCount - a.stargazerCount;
+      }
+    });
+
+    return NextResponse.json({ repositories: sortedRepos });
   } catch (error) {
     console.error('Error fetching from REST API:', error);
     

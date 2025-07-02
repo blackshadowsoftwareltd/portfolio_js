@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { StarIcon, GitForkIcon, ExternalLinkIcon } from 'lucide-react';
+import { StarIcon, GitForkIcon, ExternalLinkIcon, ChevronDownIcon } from 'lucide-react';
 
 interface Repository {
   name: string;
@@ -22,14 +22,44 @@ interface RepositoriesData {
   repositories: Repository[];
 }
 
+type SortOption = 'stars' | 'updated' | 'created';
+
+interface SortConfig {
+  value: SortOption;
+  label: string;
+  description: string;
+}
+
+const sortOptions: SortConfig[] = [
+  { value: 'stars', label: 'Most Starred', description: 'Repositories sorted by star count' },
+  { value: 'updated', label: 'Recently Updated', description: 'Repositories sorted by last update' },
+  { value: 'created', label: 'Recently Created', description: 'Repositories sorted by creation date' }
+];
+
 export default function PopularRepositories() {
   const [repositoriesData, setRepositoriesData] = useState<RepositoriesData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<SortOption>('stars');
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     fetchRepositories();
-  }, []);
+  }, [sortBy]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showDropdown) {
+        const target = event.target as HTMLElement;
+        if (!target.closest('.sort-dropdown')) {
+          setShowDropdown(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showDropdown]);
 
   const fetchRepositories = async () => {
     try {
@@ -41,7 +71,7 @@ export default function PopularRepositories() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: 'blackshadowsoftwareltd' }),
+        body: JSON.stringify({ username: 'blackshadowsoftwareltd', sortBy }),
       });
 
       if (!response.ok) {
@@ -149,6 +179,53 @@ export default function PopularRepositories() {
             <ExternalLinkIcon size={16} />
           </a>
         </div>
+      </div>
+
+      <div className="relative mb-3 sort-dropdown">
+        <button
+          onClick={() => setShowDropdown(!showDropdown)}
+          className="w-full flex items-center justify-between px-3 py-2 text-sm bg-white/5 dark:bg-black/5 hover:bg-white/10 dark:hover:bg-black/10 rounded-md border border-neutral-200/20 dark:border-neutral-700/20 hover:border-neutral-300/40 dark:hover:border-neutral-600/40 transition-all duration-200"
+        >
+          <span className="text-neutral-700 dark:text-neutral-300">
+            {sortOptions.find(option => option.value === sortBy)?.label}
+          </span>
+          <ChevronDownIcon 
+            size={16} 
+            className={`text-neutral-500 transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`}
+          />
+        </button>
+        
+        {showDropdown && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-neutral-800 rounded-md border border-neutral-200 dark:border-neutral-700 shadow-lg z-10"
+          >
+            {sortOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => {
+                  setSortBy(option.value);
+                  setShowDropdown(false);
+                }}
+                className={`w-full text-left px-3 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors first:rounded-t-md last:rounded-b-md ${
+                  sortBy === option.value 
+                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' 
+                    : 'text-neutral-700 dark:text-neutral-300'
+                }`}
+              >
+                <div>
+                  <div className="font-medium">{option.label}</div>
+                  <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                    {option.description}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </motion.div>
+        )}
       </div>
 
       <div className="space-y-2 max-h-[60vh] sm:max-h-[65vh] md:max-h-[70vh] lg:max-h-[75vh] xl:max-h-[80vh] overflow-y-auto custom-scrollbar">
