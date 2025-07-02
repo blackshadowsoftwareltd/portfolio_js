@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Github, Linkedin, Send, Mail, ExternalLink } from 'lucide-react';
+import { PROFILE_DATA, ANIMATION_SETTINGS } from '@/constants/profile';
 
 interface TerminalTypingProps {
   name: string;
@@ -12,9 +14,9 @@ interface TerminalTypingProps {
 
 export default function TerminalTyping({ 
   name, 
-  typingSpeed = 150,
-  backspaceSpeed = 100,
-  pauseTime = 2000 
+  typingSpeed = ANIMATION_SETTINGS.typingSpeed,
+  backspaceSpeed = ANIMATION_SETTINGS.backspaceSpeed,
+  pauseTime = ANIMATION_SETTINGS.pauseTime 
 }: TerminalTypingProps) {
   const [displayText, setDisplayText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
@@ -22,9 +24,17 @@ export default function TerminalTyping({
   const [isExpanded, setIsExpanded] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
 
-  const description = `Jr Software Engineer (Flutter, 🦀Rust, Go)
+  const description = `${PROFILE_DATA.designation}
 
-Hi, I'm Remon Ahammad, a professional Android and IOS App Developer with 3 years of experience. I create high-quality mobile applications using Dart and Flutter Framework. I'm also proficient in Rust, a fast and memory-efficient language that can power performance-critical services.`;
+${PROFILE_DATA.description}`;
+
+  // Icon mapping
+  const iconMap = { Github, Linkedin, Send, Mail };
+  
+  const socialMedia = PROFILE_DATA.socialMedia.map(social => ({
+    ...social,
+    icon: iconMap[social.icon as keyof typeof iconMap]
+  }));
 
   // Measure content height
   useEffect(() => {
@@ -79,7 +89,7 @@ Hi, I'm Remon Ahammad, a professional Android and IOS App Developer with 3 years
   useEffect(() => {
     const cursorInterval = setInterval(() => {
       setShowCursor(prev => !prev);
-    }, 300);
+    }, ANIMATION_SETTINGS.cursorBlinkSpeed);
 
     return () => clearInterval(cursorInterval);
   }, []);
@@ -271,6 +281,98 @@ Hi, I'm Remon Ahammad, a professional Android and IOS App Developer with 3 years
               >
                 {description}
               </motion.p>
+            </motion.div>
+
+            {/* Social Media Section */}
+            <motion.div
+              animate={{ 
+                opacity: isExpanded ? 1 : 0,
+                y: isExpanded ? 0 : 30,
+                scale: isExpanded ? 1 : 0.9
+              }}
+              transition={{ 
+                duration: 0.6, 
+                delay: isExpanded ? 0.6 : 0,
+                ease: [0.175, 0.885, 0.32, 1.275],
+                type: "spring",
+                stiffness: 100,
+                damping: 15
+              }}
+              className="mt-4"
+            >
+              <motion.div 
+                className="flex items-center mb-3"
+                animate={{
+                  scale: isExpanded ? [1, 1.05, 1] : 1
+                }}
+                transition={{
+                  duration: 0.6,
+                  delay: isExpanded ? 0.7 : 0,
+                  times: [0, 0.5, 1]
+                }}
+              >
+                <span className="text-white mr-2 text-sm font-mono">$</span>
+                <motion.span 
+                  className="text-white font-mono text-sm"
+                  animate={{
+                    color: isExpanded ? ['#ffffff', '#22c55e', '#ffffff'] : '#ffffff'
+                  }}
+                  transition={{
+                    duration: 1,
+                    delay: isExpanded ? 0.8 : 0,
+                    times: [0, 0.5, 1]
+                  }}
+                >
+                  ls -la social/
+                </motion.span>
+              </motion.div>
+              
+              <div className="grid grid-cols-2 gap-3">
+                {socialMedia.map((social, index) => {
+                  const IconComponent = social.icon;
+                  return (
+                    <motion.a
+                      key={social.name}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      initial={{ 
+                        opacity: 0,
+                        y: 20,
+                        scale: 0.9
+                      }}
+                      animate={{ 
+                        opacity: isExpanded ? 1 : 0,
+                        y: isExpanded ? 0 : 20,
+                        scale: isExpanded ? 1 : 0.9
+                      }}
+                      transition={{ 
+                        duration: 0.5, 
+                        delay: isExpanded ? 0.8 + (index * 0.1) : 0,
+                        ease: [0.25, 0.46, 0.45, 0.94],
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 20
+                      }}
+                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/10 border border-white/20 backdrop-blur-sm hover:bg-white/15 hover:border-white/30 transition-all duration-200"
+                      whileHover={{
+                        scale: 1.02
+                      }}
+                      whileTap={{ 
+                        scale: 0.98
+                      }}
+                    >
+                      <IconComponent size={16} className="text-white/80 group-hover:text-white transition-colors duration-200" />
+                      
+                      <span className="text-white/80 group-hover:text-white text-xs font-mono transition-colors duration-200">
+                        {social.command}
+                      </span>
+                      
+                      <ExternalLink size={10} className="text-white/50 group-hover:text-white/80 ml-auto transition-colors duration-200" />
+                    </motion.a>
+                  );
+                })}
+              </div>
             </motion.div>
           </div>
         </motion.div>
