@@ -160,7 +160,6 @@ export default function PopularRepositories() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
       className="relative w-96 mx-auto p-3 rounded-xl border overflow-hidden"
       style={{
         background: `

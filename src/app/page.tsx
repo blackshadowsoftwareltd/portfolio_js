@@ -414,7 +414,7 @@ export default function Home() {
               }}
             />
             <div className="relative z-10 w-full h-full flex items-center justify-center">
-              {buttonConfig.type === 'icon' && buttonConfig.icon ? (
+              {buttonConfig.type === 'icon' && 'icon' in buttonConfig ? (
                 <motion.div
                   animate={{ rotate: isActive ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
@@ -425,11 +425,11 @@ export default function Home() {
                     strokeWidth={1.5}
                   />
                 </motion.div>
-              ) : (
+              ) : buttonConfig.type === 'text' && 'text' in buttonConfig ? (
                 <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors duration-200">
                   {buttonConfig.text}
                 </span>
-              )}
+              ) : null}
             </div>
             <div
               className="absolute inset-0 opacity-30"

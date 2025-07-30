@@ -24,7 +24,7 @@ export function Presentation() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: 'easeOut' },
+      transition: { duration: 0.6, ease: [0.4, 0.0, 0.2, 1.0] as const },
     },
   };
 
@@ -36,7 +36,7 @@ export function Presentation() {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: 'easeOut',
+        ease: [0.4, 0.0, 0.2, 1.0] as const,
         delay: 0.2,
       },
     },

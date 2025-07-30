@@ -146,7 +146,6 @@ export default function GitHubContributions() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
       className="relative w-fit max-w-2xl mx-auto p-3 rounded-xl border hover:translate-y-[-70%] transition-transform duration-500 ease-in-out will-change-transform overflow-hidden"
       style={{
         background: `
@@ -177,8 +176,7 @@ export default function GitHubContributions() {
           inset 0 1px 0 rgba(255, 255, 255, 0.5),
           inset 0 -1px 0 rgba(255, 255, 255, 0.15)
         `,
-        borderColor: 'rgba(34, 197, 94, 0.3)',
-        transition: { type: 'spring', stiffness: 400, damping: 25 }
+        borderColor: 'rgba(34, 197, 94, 0.3)'
       }}
       whileTap={{ scale: 0.98 }}
       onHoverStart={() => setIsHovered(true)}

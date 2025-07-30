@@ -12,7 +12,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
 export type ChatMessageContentProps = {
-  message: Message;
+  message: any;
   isLast?: boolean;
   isLoading?: boolean;
   reload?: () => Promise<string | null | undefined>;
@@ -76,7 +76,7 @@ export default function ChatMessageContent({
 }: ChatMessageContentProps) {
   // Only handle text parts
   const renderContent = () => {
-    return message.parts?.map((part, partIndex) => {
+    return message.parts?.map((part: any, partIndex: number) => {
       if (part.type !== 'text' || !part.text) return null;
 
       // Split content by code block markers
@@ -84,7 +84,7 @@ export default function ChatMessageContent({
 
       return (
         <div key={partIndex} className="w-full space-y-4">
-          {contentParts.map((content, i) =>
+          {contentParts.map((content: string, i: number) =>
             i % 2 === 0 ? (
               // Regular text content
               <div key={`text-${i}`} className="prose dark:prose-invert w-full">
