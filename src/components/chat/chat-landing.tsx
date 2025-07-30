@@ -42,14 +42,7 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery }) => {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.4,
-        ease: "easeOut",
-      },
-    },
+    visible: { opacity: 1, y: 0 },
   };
 
   return (
@@ -60,9 +53,13 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery }) => {
       variants={containerVariants}
     >
       {/* Welcome message */}
-      <motion.div className="mb-8 text-center" variants={itemVariants}>
+      <motion.div
+        className="mb-8 text-center"
+        variants={itemVariants}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+      >
         <h2 className="mb-3 text-2xl font-semibold">
-            I'm Raphael's digital twin
+          I'm Raphael's digital twin
         </h2>
         <p className="text-muted-foreground mx-auto max-w-md">
           The first portfolio that fit YOU needs.

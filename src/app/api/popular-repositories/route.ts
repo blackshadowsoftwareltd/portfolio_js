@@ -1,5 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-
+// Add this interface definition
+interface Repository {
+  name: string;
+  description: string;
+  stargazerCount: number;
+  forkCount: number;
+  primaryLanguage: {
+    name: string;
+    color: string;
+  } | null;
+  url: string;
+  createdAt: string;
+  updatedAt: string;
+}
+ 
 const GITHUB_GRAPHQL_ENDPOINT = 'https://api.github.com/graphql';
 
 const POPULAR_REPOS_QUERY = `
@@ -171,7 +185,7 @@ async function fetchRepositoriesWithoutToken(username: string, sortBy: string = 
     }));
 
     // Apply client-side sorting to ensure correct order (GitHub API sorting might not be reliable)
-    const sortedRepos = transformedRepos.sort((a, b) => {
+    const sortedRepos = transformedRepos.sort((a:Repository, b:Repository) => {
       switch (sortBy) {
         case 'stars':
           return b.stargazerCount - a.stargazerCount;
