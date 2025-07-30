@@ -1,5 +1,6 @@
 export const PROFILE_DATA = {
   name: "Rimon Ahammad",
+  email: "nextr72@gmail.com",
   designation: "Jr Software Engineer (Flutter, 🦀Rust, Go)",
   description: `Hi, I'm Remon Ahammad, a professional Android and IOS App Developer with 3 years of experience. I create high-quality mobile applications using Dart and Flutter Framework. I'm also proficient in Rust, a fast and memory-efficient language that can power performance-critical services.`,
   

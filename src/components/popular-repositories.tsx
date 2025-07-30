@@ -42,6 +42,7 @@ export default function PopularRepositories() {
   const [error, setError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortOption>('stars');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     fetchRepositories();
@@ -160,8 +161,83 @@ export default function PopularRepositories() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="w-96 mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30"
+      className="relative w-96 mx-auto p-3 rounded-xl border overflow-hidden"
+      style={{
+        background: `
+          linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.25) 0%,
+            rgba(255, 255, 255, 0.10) 25%,
+            rgba(255, 255, 255, 0.05) 50%,
+            rgba(255, 255, 255, 0.10) 75%,
+            rgba(255, 255, 255, 0.25) 100%
+          )
+        `,
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        boxShadow: `
+          0 8px 32px rgba(0, 0, 0, 0.12),
+          0 2px 8px rgba(0, 0, 0, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.4),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.1)
+        `,
+      }}
+      whileHover={{
+        scale: 1.02,
+        y: -4,
+        boxShadow: `
+          0 25px 50px rgba(0, 0, 0, 0.25), 
+          0 0 0 1px rgba(59, 130, 246, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.5),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.15)
+        `,
+        borderColor: 'rgba(59, 130, 246, 0.3)',
+        transition: { type: 'spring', stiffness: 400, damping: 25 }
+      }}
+      whileTap={{ scale: 0.98 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
     >
+      {/* Moving Radial Gradient - Simplified */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl"
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: isHovered ? 0.4 : 0,
+          background: isHovered ? [
+            `radial-gradient(circle at 30% 30%, 
+              rgba(255, 255, 255, 0.6) 0%,
+              rgba(255, 255, 255, 0.2) 40%,
+              transparent 70%
+            )`,
+            `radial-gradient(circle at 70% 70%, 
+              rgba(255, 255, 255, 0.6) 0%,
+              rgba(255, 255, 255, 0.2) 40%,
+              transparent 70%
+            )`,
+            `radial-gradient(circle at 30% 30%, 
+              rgba(255, 255, 255, 0.6) 0%,
+              rgba(255, 255, 255, 0.2) 40%,
+              transparent 70%
+            )`
+          ] : `radial-gradient(circle at 30% 30%, 
+            rgba(255, 255, 255, 0.6) 0%,
+            rgba(255, 255, 255, 0.2) 40%,
+            transparent 70%
+          )`
+        }}
+        transition={{
+          opacity: { duration: 0.3 },
+          background: {
+            duration: isHovered ? 3 : 0,
+            repeat: isHovered ? Infinity : 0,
+            ease: "easeInOut"
+          }
+        }}
+      />
+
+      <div className="relative z-10">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
           Popular Repositories
@@ -287,6 +363,7 @@ export default function PopularRepositories() {
             </a>
           </motion.div>
         ))}
+      </div>
       </div>
     </motion.div>
   );

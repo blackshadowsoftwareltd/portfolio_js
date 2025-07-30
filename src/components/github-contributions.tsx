@@ -39,6 +39,7 @@ export default function GitHubContributions() {
   const [contributionsData, setContributionsData] = useState<ContributionsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const fetchContributions = async () => {
@@ -146,8 +147,178 @@ export default function GitHubContributions() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="w-fit max-w-2xl mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30 hover:translate-y-[-70%] transition-transform duration-500 ease-in-out will-change-transform"
+      className="relative w-fit max-w-2xl mx-auto p-3 rounded-xl border hover:translate-y-[-70%] transition-transform duration-500 ease-in-out will-change-transform overflow-hidden"
+      style={{
+        background: `
+          linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.25) 0%,
+            rgba(255, 255, 255, 0.10) 25%,
+            rgba(255, 255, 255, 0.05) 50%,
+            rgba(255, 255, 255, 0.10) 75%,
+            rgba(255, 255, 255, 0.25) 100%
+          )
+        `,
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        boxShadow: `
+          0 8px 32px rgba(0, 0, 0, 0.12),
+          0 2px 8px rgba(0, 0, 0, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.4),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.1)
+        `,
+      }}
+      whileHover={{
+        scale: 1.02,
+        y: -4,
+        boxShadow: `
+          0 25px 50px rgba(0, 0, 0, 0.25), 
+          0 0 0 1px rgba(34, 197, 94, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.5),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.15)
+        `,
+        borderColor: 'rgba(34, 197, 94, 0.3)',
+        transition: { type: 'spring', stiffness: 400, damping: 25 }
+      }}
+      whileTap={{ scale: 0.98 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
     >
+      {/* Animated Background Effects */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl"
+        initial={{ opacity: 0 }}
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+      >
+        {/* Floating Orbs */}
+        <motion.div
+          className="absolute w-20 h-20 rounded-full opacity-10"
+          style={{ 
+            background: 'radial-gradient(circle, rgba(34, 197, 94, 0.3), transparent)',
+            top: '10%',
+            left: '10%'
+          }}
+          animate={{
+            scale: [1, 1.3, 1],
+            x: [0, 30, 0],
+            y: [0, -20, 0],
+          }}
+          transition={{ 
+            duration: 3, 
+            repeat: Infinity,
+            ease: 'easeInOut'
+          }}
+        />
+        <motion.div
+          className="absolute w-16 h-16 rounded-full opacity-8"
+          style={{ 
+            background: 'radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent)',
+            top: '60%',
+            right: '15%'
+          }}
+          animate={{
+            scale: [1, 1.4, 1],
+            x: [0, -25, 0],
+            y: [0, 25, 0],
+          }}
+          transition={{ 
+            duration: 3.5, 
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: 0.5
+          }}
+        />
+        
+        {/* Additional pulse rings */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 w-4 h-4 rounded-full border-2 border-green-400 opacity-40"
+          animate={{
+            scale: [1, 8],
+            opacity: [0.4, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: 'easeOut'
+          }}
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/2 w-4 h-4 rounded-full border-2 border-blue-400 opacity-30"
+          animate={{
+            scale: [1, 6],
+            opacity: [0.3, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: 'easeOut',
+            delay: 0.4
+          }}
+        />
+        
+        {/* Moving Radial Gradient */}
+        <motion.div
+          className="absolute inset-0"
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: isHovered ? 0.4 : 0,
+            background: isHovered ? [
+              `radial-gradient(circle at 30% 30%, 
+                rgba(255, 255, 255, 0.6) 0%,
+                rgba(255, 255, 255, 0.2) 40%,
+                transparent 70%
+              )`,
+              `radial-gradient(circle at 70% 70%, 
+                rgba(255, 255, 255, 0.6) 0%,
+                rgba(255, 255, 255, 0.2) 40%,
+                transparent 70%
+              )`,
+              `radial-gradient(circle at 30% 30%, 
+                rgba(255, 255, 255, 0.6) 0%,
+                rgba(255, 255, 255, 0.2) 40%,
+                transparent 70%
+              )`
+            ] : `radial-gradient(circle at 30% 30%, 
+              rgba(255, 255, 255, 0.6) 0%,
+              rgba(255, 255, 255, 0.2) 40%,
+              transparent 70%
+            )`
+          }}
+          transition={{
+            opacity: { duration: 0.3 },
+            background: {
+              duration: isHovered ? 3 : 0,
+              repeat: isHovered ? Infinity : 0,
+              ease: "easeInOut"
+            }
+          }}
+        />
+      </motion.div>
+
+      {/* Shimmer Effect */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none rounded-xl overflow-hidden"
+        initial={{ x: '-100%', opacity: 0 }}
+        whileHover={{
+          x: ['100%', '100%'],
+          opacity: [0, 1, 0]
+        }}
+        transition={{ 
+          duration: 1.2, 
+          ease: 'easeInOut',
+          times: [0, 0.5, 1],
+          repeat: Infinity,
+          repeatDelay: 2
+        }}
+        style={{
+          background: 'linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.15), transparent)',
+          transform: 'skew(-20deg)'
+        }}
+      />
+
+      <div className="relative z-10">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
           GitHub Contributions
@@ -244,6 +415,7 @@ export default function GitHubContributions() {
             <span>More</span>
           </div>
         </div>
+      </div>
       </div>
     </motion.div>
   );

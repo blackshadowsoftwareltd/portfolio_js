@@ -1,72 +1,61 @@
 
 > portfolio.com@0.1.0 dev
-> next dev
+> next dev -p 3000
 
    ▲ Next.js 15.2.3
    - Local:        http://localhost:3000
-   - Network:      http://192.168.0.105:3000
+   - Network:      http://192.168.21.55:3000
+   - Environments: .env.local
 
  ✓ Starting...
- ✓ Ready in 1155ms
+ ✓ Ready in 2.8s
  ○ Compiling / ...
- ✓ Compiled / in 3.1s (1708 modules)
- HEAD / 200 in 3311ms
- ✓ Compiled in 257ms (808 modules)
- ⚠ The "images.domains" configuration is deprecated. Please use "images.remotePatterns" configuration instead.
- GET / 200 in 81ms
- GET / 200 in 33ms
- ○ Compiling /chat ...
- ✓ Compiled /chat in 1601ms (2498 modules)
- GET /chat?query=What+are+your+projects%3F+What+are+you+working+on+right+now%3F 200 in 1734ms
- GET /chat?query=Who+are+you%3F+I+want+to+know+more+about+you. 200 in 14ms
- ○ Compiling /api/chat ...
- ✓ Compiled /api/chat in 852ms (2562 modules)
-[CHAT-API] Incoming messages: [
-  {
-    role: 'user',
-    content: 'Who are you? I want to know more about you.',
-    parts: [ [Object] ]
-  }
-]
-[CHAT-API] Incoming messages: [
-  {
-    role: 'user',
-    content: 'Who are you? I want to know more about you.',
-    parts: [ [Object] ]
-  }
-]
- POST /api/chat 200 in 964ms
- POST /api/chat 200 in 969ms
- GET / 200 in 135ms
- GET /chat?query=What+are+your+skills%3F+Give+me+a+list+of+your+soft+and+hard+skills. 200 in 18ms
-[CHAT-API] Incoming messages: [
-  {
-    role: 'user',
-    content: 'What are your skills? Give me a list of your soft and hard skills.',
-    parts: [ [Object] ]
-  }
-]
- POST /api/chat 200 in 4ms
-[CHAT-API] Incoming messages: [
-  {
-    role: 'user',
-    content: 'What are your skills? Give me a list of your soft and hard skills.',
-    parts: [ [Object] ]
-  }
-]
- POST /api/chat 200 in 7ms
-[CHAT-API] Incoming messages: [
-  {
-    role: 'user',
-    content: 'What are your skills? Give me a list of your soft and hard skills.',
-    parts: [ [Object] ]
-  },
-  {
-    role: 'user',
-    content: 'Who are you? I want to know more about you.',
-    parts: [ [Object] ]
-  }
-]
- POST /api/chat 200 in 6ms
- GET / 200 in 54ms
+ ✓ Compiled / in 2.1s (1618 modules)
+ GET / 200 in 3090ms
+ ✓ Compiled in 1061ms (768 modules)
+ ○ Compiling /api/popular-repositories ...
+ ✓ Compiled /api/popular-repositories in 562ms (1627 modules)
+No GitHub token provided, returning mock contribution stats
+ POST /api/contribution-stats 200 in 658ms
+ ✓ Compiled /api/open-source-projects in 204ms (1629 modules)
+No GitHub token provided, returning mock open source projects
+ POST /api/open-source-projects 200 in 240ms
+ POST /api/popular-repositories 200 in 1444ms
+ POST /api/github-contributions 200 in 4033ms
+No GitHub token provided, returning mock contribution stats
+ POST /api/contribution-stats 200 in 6ms
+No GitHub token provided, returning mock contribution stats
+ POST /api/contribution-stats 200 in 4ms
+No GitHub token provided, returning mock contribution stats
+ POST /api/contribution-stats 200 in 2ms
+No GitHub token provided, returning mock open source projects
+ POST /api/open-source-projects 200 in 6ms
+No GitHub token provided, returning mock open source projects
+ POST /api/open-source-projects 200 in 9ms
+No GitHub token provided, returning mock open source projects
+ POST /api/open-source-projects 200 in 4ms
+No GitHub token provided, returning mock contribution stats
+ POST /api/contribution-stats 200 in 3ms
+No GitHub token provided, returning mock contribution stats
+ POST /api/contribution-stats 200 in 4ms
+No GitHub token provided, returning mock open source projects
+ POST /api/open-source-projects 200 in 3ms
+No GitHub token provided, returning mock open source projects
+ POST /api/open-source-projects 200 in 4ms
+No GitHub token provided, returning mock contribution stats
+ POST /api/contribution-stats 200 in 3ms
+No GitHub token provided, returning mock contribution stats
+ POST /api/contribution-stats 200 in 5ms
+No GitHub token provided, returning mock open source projects
+ POST /api/open-source-projects 200 in 4ms
+No GitHub token provided, returning mock open source projects
+ POST /api/open-source-projects 200 in 3ms
+No GitHub token provided, returning mock contribution stats
+ POST /api/contribution-stats 200 in 5ms
+No GitHub token provided, returning mock contribution stats
+ POST /api/contribution-stats 200 in 6ms
+No GitHub token provided, returning mock open source projects
+ POST /api/open-source-projects 200 in 6ms
+No GitHub token provided, returning mock open source projects
+ POST /api/open-source-projects 200 in 11ms
 [?25h
