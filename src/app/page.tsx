@@ -2,6 +2,7 @@
 
 import FluidCursor from '@/components/FluidCursor';
 import GitHubContributions from '@/components/github-contributions';
+import CenterChatbox from '@/components/center-chatbox';
 import LiquidGlassButton from '@/components/liquid-glass-button';
 import PopularRepositories from '@/components/popular-repositories';
 import TerminalTyping from '@/components/terminal-typing';
@@ -311,6 +312,9 @@ export default function Home() {
       
       {/* Terminal Typing Animation */}
       <TerminalTyping name="Rimon Ahammad" />
+
+      {/* Centered conversation starter */}
+      <CenterChatbox />
       
       {/* Dynamic Navigation Buttons */}
       <div className="fixed top-4 right-4 z-50 flex max-w-[calc(100vw-5rem)] flex-row-reverse flex-wrap items-center justify-start gap-1.5 sm:max-w-none sm:gap-4">
