@@ -117,7 +117,7 @@ export default function OpenSourceContributions() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="w-full max-w-6xl mx-auto p-6"
+      className="w-full max-w-6xl mx-auto p-4 sm:p-6"
       // style={{
       //   background: `
       //     linear-gradient(135deg, 

@@ -22,7 +22,7 @@ const Tools = () => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6">
+    <div className="w-full max-w-6xl mx-auto p-4 sm:p-6">
       {/* Header */}
       <motion.div 
         className="text-center mb-8"
@@ -65,7 +65,7 @@ const Tools = () => {
 
       {/* Tools Grid */}
       <motion.div 
-        className="grid grid-cols-3 gap-4"
+        className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4"
         layout
       >
         {filteredTools.map((tool, index) => (

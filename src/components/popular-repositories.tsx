@@ -107,7 +107,7 @@ export default function PopularRepositories() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-80 mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30"
+        className="w-full mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30"
       >
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
@@ -136,7 +136,7 @@ export default function PopularRepositories() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-96 mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30"
+        className="w-full mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30"
       >
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
@@ -160,7 +160,7 @@ export default function PopularRepositories() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative w-96 mx-auto p-3 rounded-xl border overflow-hidden"
+      className="relative w-full mx-auto p-3 rounded-xl border overflow-hidden"
       style={{
         background: `
           linear-gradient(135deg, 
@@ -303,7 +303,7 @@ export default function PopularRepositories() {
         )}
       </div>
 
-      <div className="space-y-2 max-h-[60vh] sm:max-h-[65vh] md:max-h-[70vh] lg:max-h-[75vh] xl:max-h-[80vh] overflow-y-auto custom-scrollbar">
+      <div className="space-y-2 max-h-[60dvh] sm:max-h-[65dvh] md:max-h-[70dvh] lg:max-h-[75dvh] xl:max-h-[80dvh] overflow-y-auto custom-scrollbar">
         {repositoriesData?.repositories.map((repo, index) => (
           <motion.div
             key={repo.name}

@@ -73,7 +73,7 @@ export default function GitHubContributions() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-fit max-w-4xl mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30"
+        className="w-fit max-w-[min(56rem,calc(100vw-2rem))] mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30"
       >
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
@@ -101,7 +101,7 @@ export default function GitHubContributions() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-fit max-w-4xl mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30"
+        className="w-fit max-w-[min(56rem,calc(100vw-2rem))] mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30"
       >
         <div className="text-center">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-white mb-3">
@@ -145,7 +145,7 @@ export default function GitHubContributions() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative w-fit max-w-2xl mx-auto p-3 rounded-xl border hover:translate-y-[-70%] transition-transform duration-500 ease-in-out will-change-transform overflow-hidden"
+      className="relative w-fit max-w-[min(42rem,calc(100vw-2rem))] mx-auto p-3 rounded-xl border md:hover:translate-y-[-70%] transition-transform duration-500 ease-in-out will-change-transform overflow-hidden"
       style={{
         background: `
           linear-gradient(135deg, 
@@ -335,7 +335,7 @@ export default function GitHubContributions() {
         </div>
       </div>
 
-      <div className="relative w-fit">
+      <div className="relative w-fit max-w-full overflow-x-auto">
         {/* Month labels */}
         <div className="relative mb-1 ml-6 h-4">
           {monthLabels.map(({ month, index }) => (

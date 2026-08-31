@@ -6,7 +6,7 @@ import { Home } from 'lucide-react';
 export default function LiquidGlassButton() {
   return (
     <motion.button
-      className="group fixed top-4 left-4 z-50 w-12 h-12 rounded-2xl overflow-hidden"
+      className="group fixed top-4 left-4 z-50 h-10 w-10 rounded-2xl overflow-hidden sm:h-12 sm:w-12"
       style={{
         background: `
           linear-gradient(135deg, 

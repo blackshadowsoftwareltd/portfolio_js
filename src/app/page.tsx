@@ -26,6 +26,7 @@ import {
   MessageCircle,
   Briefcase,
   GraduationCap,
+  GitFork,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -70,6 +71,7 @@ const BUTTON_CONFIG = [
     key: 'opensource', 
     type: 'text' as const, 
     text: 'Open Source', 
+    icon: GitFork, 
     state: 'showOpenSource',
     panel: 'opensource'
   },
@@ -77,6 +79,7 @@ const BUTTON_CONFIG = [
     key: 'experience', 
     type: 'text' as const, 
     text: 'Experience', 
+    icon: GraduationCap, 
     state: 'showExperience',
     panel: 'experience'
   },
@@ -118,6 +121,27 @@ const calculateButtonPositions = () => {
 };
 
 const BUTTON_POSITIONS = calculateButtonPositions();
+
+// A panel sits directly under its button while the viewport has room for that
+// offset, and slides back to the right edge instead of running off the left on
+// narrower screens. `right: 304px` + `w-[80vw]` previously needed a 1520px
+// viewport, so the projects panel was clipped on every laptop.
+const panelAnchor = (offset: number, width: string) => {
+  const clamped = `min(${width}, calc(100vw - 2rem))`;
+  return {
+    right: `max(1rem, min(${offset}px, calc(100vw - ${clamped} - 1rem)))`,
+    width: clamped,
+  };
+};
+
+const PANEL_ANCHORS = {
+  contact: panelAnchor(BUTTON_POSITIONS.contact, '400px'),
+  projects: panelAnchor(BUTTON_POSITIONS.projects, 'min(80vw, 1200px)'),
+  experience: panelAnchor(BUTTON_POSITIONS.experience, '600px'),
+  opensource: panelAnchor(BUTTON_POSITIONS.opensource, 'min(80vw, 1200px)'),
+  tools: panelAnchor(BUTTON_POSITIONS.tools, '500px'),
+  repositories: panelAnchor(BUTTON_POSITIONS.repositories, '384px'),
+};
 
 /* ---------- component ---------- */
 export default function Home() {
@@ -289,6 +313,7 @@ export default function Home() {
       <TerminalTyping name="Rimon Ahammad" />
       
       {/* Dynamic Navigation Buttons */}
+      <div className="fixed top-4 right-4 z-50 flex max-w-[calc(100vw-5rem)] flex-row-reverse flex-wrap items-center justify-start gap-1.5 sm:max-w-none sm:gap-4">
       {BUTTON_CONFIG.map((buttonConfig, index) => {
         const isActive = eval(`show${buttonConfig.state.charAt(4).toUpperCase() + buttonConfig.state.slice(5)}`);
         
@@ -312,9 +337,8 @@ export default function Home() {
               else if (buttonConfig.state === 'showExperience') setShowExperience(true);
               else if (buttonConfig.state === 'showOpenSource') setShowOpenSource(true);
             }}
-            className={`group fixed top-4 z-50 ${buttonConfig.type === 'icon' ? 'w-12' : 'w-24'} h-12 rounded-2xl overflow-hidden`}
+            className={`group h-10 w-10 shrink-0 rounded-2xl overflow-hidden sm:h-12 ${buttonConfig.type === 'icon' ? 'sm:w-12' : 'sm:w-24'}`}
             style={{
-              right: `${BUTTON_POSITIONS[buttonConfig.key]}px`,
               background: `
                 linear-gradient(135deg, 
                   rgba(255, 255, 255, 0.25) 0%,
@@ -407,9 +431,16 @@ export default function Home() {
                   />
                 </motion.div>
               ) : buttonConfig.type === 'text' && 'text' in buttonConfig ? (
-                <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors duration-200">
-                  {buttonConfig.text}
-                </span>
+                <>
+                  <buttonConfig.icon
+                    size={20}
+                    className="text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors duration-200 sm:hidden"
+                    strokeWidth={1.5}
+                  />
+                  <span className="hidden text-sm font-medium text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors duration-200 sm:inline">
+                    {buttonConfig.text}
+                  </span>
+                </>
               ) : null}
             </div>
             <div
@@ -430,20 +461,23 @@ export default function Home() {
           </motion.button>
         );
       })}
+      </div>
 
       
       {/* GitHub Cards Container */}
-      <div className="fixed left-0 right-0 z-10 transform translate-y-[75%]" 
+      {/* Parked mostly off-screen and revealed on hover, which no touch device
+          can do — so show it in place below the md breakpoint. */}
+      <div className="fixed left-0 right-0 z-10 transform translate-y-0 md:translate-y-[75%]" 
            style={{ bottom: '12px' }}>
-        <div className="p-4 flex gap-4 justify-center items-end max-w-7xl mx-auto">
+        <div className="p-4 flex gap-4 justify-center items-end max-w-7xl mx-auto overflow-x-hidden">
           <GitHubContributions />
         </div>
       </div>
       
       {/* Contact Slide Panel */}
       <motion.div
-        className="fixed top-[71px] z-40"
-        style={{ right: `${BUTTON_POSITIONS.contact}px` }}
+        className="fixed top-[116px] sm:top-[71px] z-40"
+        style={{ right: PANEL_ANCHORS.contact.right }}
         initial={{ x: '100vw' }}
         animate={{ x: showContact ? '0%' : '100vw' }}
         transition={{
@@ -454,8 +488,9 @@ export default function Home() {
         }}
       >
         <motion.div 
-          className="relative w-[400px] rounded-2xl shadow-2xl border overflow-hidden"
+          className="relative rounded-2xl shadow-2xl border overflow-hidden"
           style={{
+            width: PANEL_ANCHORS.contact.width,
             background: `
               linear-gradient(135deg, 
                 rgba(255, 255, 255, 0.25) 0%,
@@ -640,8 +675,8 @@ export default function Home() {
       
       {/* Projects Slide Panel */}
       <motion.div
-        className="fixed top-[71px] z-40"
-        style={{ right: `${BUTTON_POSITIONS.projects}px` }}
+        className="fixed top-[116px] sm:top-[71px] z-40"
+        style={{ right: PANEL_ANCHORS.projects.right }}
         initial={{ x: '100vw' }}
         animate={{ x: showProjects ? '0%' : '100vw' }}
         transition={{
@@ -652,8 +687,9 @@ export default function Home() {
         }}
       >
         <motion.div 
-          className="relative w-[80vw] max-w-[1200px] rounded-2xl shadow-2xl border overflow-hidden"
+          className="relative rounded-2xl shadow-2xl border overflow-hidden"
           style={{
+            width: PANEL_ANCHORS.projects.width,
             background: `
               linear-gradient(135deg, 
                 rgba(255, 255, 255, 0.25) 0%,
@@ -728,7 +764,7 @@ export default function Home() {
             }}
           />
 
-          <div className="relative z-10 h-[calc(100vh-160px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent p-6" suppressHydrationWarning={true}>
+          <div className="relative z-10 h-[calc(100dvh-160px)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent p-6" suppressHydrationWarning={true}>
             <Projects key={showProjects ? 'open' : 'closed'} />
           </div>
         </motion.div>
@@ -736,8 +772,8 @@ export default function Home() {
       
       {/* Experience Slide Panel */}
       <motion.div
-        className="fixed top-[71px] z-40"
-        style={{ right: `${BUTTON_POSITIONS.experience}px` }}
+        className="fixed top-[116px] sm:top-[71px] z-40"
+        style={{ right: PANEL_ANCHORS.experience.right }}
         initial={{ x: '100vw' }}
         animate={{ x: showExperience ? '0%' : '100vw' }}
         transition={{
@@ -748,8 +784,9 @@ export default function Home() {
         }}
       >
         <motion.div 
-          className="relative w-[600px] h-[calc(100vh-160px)] rounded-2xl shadow-2xl border overflow-hidden"
+          className="relative h-[calc(100dvh-160px)] rounded-2xl shadow-2xl border overflow-hidden"
           style={{
+            width: PANEL_ANCHORS.experience.width,
             background: `
               linear-gradient(135deg, 
                 rgba(255, 255, 255, 0.25) 0%,
@@ -934,8 +971,8 @@ export default function Home() {
       
       {/* Open Source Slide Panel */}
       <motion.div
-        className="fixed top-[71px] z-40"
-        style={{ right: `${BUTTON_POSITIONS.opensource}px` }}
+        className="fixed top-[116px] sm:top-[71px] z-40"
+        style={{ right: PANEL_ANCHORS.opensource.right }}
         initial={{ x: '100vw' }}
         animate={{ x: showOpenSource ? '0%' : '100vw' }}
         transition={{
@@ -946,8 +983,9 @@ export default function Home() {
         }}
       >
         <motion.div 
-          className="relative w-[80vw] max-w-[1200px] h-[calc(100vh-160px)] rounded-2xl shadow-2xl border overflow-hidden"
+          className="relative h-[calc(100dvh-160px)] rounded-2xl shadow-2xl border overflow-hidden"
           style={{
+            width: PANEL_ANCHORS.opensource.width,
             background: `
               linear-gradient(135deg, 
                 rgba(255, 255, 255, 0.25) 0%,
@@ -990,8 +1028,8 @@ export default function Home() {
       
       {/* Tools Slide Panel */}
       <motion.div
-        className="fixed top-[71px] z-40"
-        style={{ right: `${BUTTON_POSITIONS.tools}px` }}
+        className="fixed top-[116px] sm:top-[71px] z-40"
+        style={{ right: PANEL_ANCHORS.tools.right }}
         initial={{ x: '100vw' }}
         animate={{ x: showTools ? '0%' : '100vw' }}
         transition={{
@@ -1002,8 +1040,9 @@ export default function Home() {
         }}
       >
         <motion.div 
-          className="relative w-[500px] h-[calc(100vh-80px)] rounded-2xl shadow-2xl border overflow-hidden"
+          className="relative h-[calc(100dvh-80px)] rounded-2xl shadow-2xl border overflow-hidden"
           style={{
+            width: PANEL_ANCHORS.tools.width,
             background: `
               linear-gradient(135deg, 
                 rgba(255, 255, 255, 0.25) 0%,
@@ -1207,8 +1246,8 @@ export default function Home() {
 
       {/* PopularRepositories Slide Panel */}
       <motion.div
-        className="fixed top-[71px] z-40"
-        style={{ right: `${BUTTON_POSITIONS.repositories}px` }}
+        className="fixed top-[116px] sm:top-[71px] z-40"
+        style={{ right: PANEL_ANCHORS.repositories.right }}
         initial={{ x: '100vw' }}
         animate={{ x: showRepositories ? '0%' : '100vw' }}
         transition={{
@@ -1218,7 +1257,7 @@ export default function Home() {
           duration: 0.6
         }}
       >
-        <div className="w-96" suppressHydrationWarning={true}>
+        <div style={{ width: PANEL_ANCHORS.repositories.width }} suppressHydrationWarning={true}>
           <PopularRepositories />
         </div>
       </motion.div>
