@@ -21,7 +21,24 @@ There is no test framework, test script, or test file in this repo — do not as
 
 `GITHUB_TOKEN` in `.env.local` (git-ignored, not present in a fresh clone). Every GitHub-backed API route degrades gracefully without it — see "GitHub data routes" below. `dev.log` shows the app running entirely on mock data, which is the normal local state.
 
-The OpenAI key for the chat route comes from `OPENAI_API_KEY`, read implicitly by `@ai-sdk/openai`.
+### Chat model
+
+`/api/chat` defaults to a **local model served by Ollama**, not OpenAI. Ollama exposes an
+OpenAI-compatible endpoint on `/v1`, so `src/app/api/chat/model.ts` points the existing
+`@ai-sdk/openai` provider at it via `baseURL` — no extra dependency.
+
+| var | default | notes |
+| --- | --- | --- |
+| `LLM_PROVIDER` | `ollama` | set to `openai` for the hosted model |
+| `OLLAMA_BASE_URL` | `http://localhost:11434/v1` | |
+| `OLLAMA_MODEL` | `qwen2.5:1.5b` | 1.5B, Q4_K_M, ~1 GB |
+| `OPENAI_MODEL` | `gpt-4o-mini` | only when `LLM_PROVIDER=openai` |
+| `OPENAI_API_KEY` | — | only when `LLM_PROVIDER=openai`, read implicitly by `@ai-sdk/openai` |
+
+Start the model server with `ollama serve` (weights live in `~/.ollama/models`, outside this
+repo; `.gitignore` also covers `*.gguf`, `/models/` and friends). The route health-checks
+Ollama first and returns **503 with a readable message** when it is not running, rather than a
+connection stack trace in the chat UI.
 
 ## Origin and identity split
 

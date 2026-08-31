@@ -1,5 +1,10 @@
-import { openai } from '@ai-sdk/openai';
 import { streamText } from "ai";
+import {
+  LLM_PROVIDER,
+  checkOllamaReachable,
+  describeChatModel,
+  getChatModel,
+} from './model';
 import { SYSTEM_PROMPT } from './prompt';
 import { getProjects } from './tools/getProjects';
 import { getPresentation } from './tools/getPresentation';
@@ -29,7 +34,16 @@ function errorHandler(error: unknown) {
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
-    console.log("[CHAT-API] Incoming messages:", messages);
+    console.log(`[CHAT-API] ${describeChatModel()} — ${messages.length} message(s)`);
+
+    // A local model that isn't running is the most likely failure here, so say
+    // so plainly instead of surfacing a connection stack trace in the chat UI.
+    if (LLM_PROVIDER !== 'openai') {
+      const health = await checkOllamaReachable();
+      if (!health.ok) {
+        return new Response(health.error, { status: 503 });
+      }
+    }
 
     messages.unshift(SYSTEM_PROMPT);
 
@@ -45,7 +59,7 @@ export async function POST(req: Request) {
     };
 
     const result = streamText({
-      model: openai("gpt-4o-mini"),
+      model: getChatModel(),
       messages,
       toolCallStreaming: true,
       tools,

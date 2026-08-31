@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local LLM weights (Ollama keeps its blobs in ~/.ollama/models, outside this
+# repo; these entries cover any model file pulled into the project directory)
+/models/
+*.gguf
+*.ggml
+*.bin
+*.safetensors
+*.pt
+*.onnx
+.ollama/
