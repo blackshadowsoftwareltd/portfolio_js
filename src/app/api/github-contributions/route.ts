@@ -98,9 +98,18 @@ async function fetchContributionsWithoutToken(username: string) {
     const data = await response.json();
     
     // Transform the data to match our expected format
+    const weeks = transformContributionsToWeeks(data.contributions || []);
+
+    // Sum the days actually rendered. data.total[year] is the calendar year to
+    // date, but the grid below the label covers a rolling 365-day window, so
+    // the two disagree for most of the year.
     const transformedData = {
-      totalContributions: data.total?.[new Date().getFullYear()] || 0,
-      weeks: transformContributionsToWeeks(data.contributions || [])
+      totalContributions: weeks.reduce(
+        (sum: number, week: { contributionDays: { contributionCount: number }[] }) =>
+          sum + week.contributionDays.reduce((s: number, d: { contributionCount: number }) => s + d.contributionCount, 0),
+        0
+      ),
+      weeks
     };
 
     return NextResponse.json(transformedData);

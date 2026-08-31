@@ -8,7 +8,7 @@ export const PROFILE_DATA = {
     {
       name: 'GitHub',
       command: 'open github',
-      url: 'https://github.com/blackshadowsoftwareltd',
+      url: 'https://github.com/RemonAhammad',
       icon: 'Github'
     },
     {

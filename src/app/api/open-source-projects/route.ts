@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_USERNAME = 'blackshadowsoftwareltd';
+const GITHUB_USERNAME = 'RemonAhammad';
 
 interface GitHubRepository {
   name: string;
@@ -25,30 +25,35 @@ export async function POST(request: NextRequest) {
     const { username } = await request.json();
     const targetUsername = username || GITHUB_USERNAME;
 
-    // If no GitHub token, return mock data
-    if (!GITHUB_TOKEN) {
-      console.warn('No GitHub token provided, returning mock open source projects');
-      return NextResponse.json(generateMockOpenSourceProjects(targetUsername));
-    }
-
-    const headers = {
-      'Authorization': `Bearer ${GITHUB_TOKEN}`,
+    // Public repositories are readable without a token; the token only raises
+    // the rate limit, so this path no longer short-circuits to mock data.
+    const headers: Record<string, string> = {
       'Accept': 'application/vnd.github.v3+json',
       'User-Agent': 'Portfolio-App',
     };
 
-    // Fetch user repositories
-    const reposResponse = await fetch(
-      `https://api.github.com/users/${targetUsername}/repos?per_page=100&sort=updated&direction=desc`,
-      { headers }
-    );
-
-    if (!reposResponse.ok) {
-      console.warn(`GitHub API error: ${reposResponse.status}, returning mock data`);
-      return NextResponse.json(generateMockOpenSourceProjects(targetUsername));
+    if (GITHUB_TOKEN) {
+      headers['Authorization'] = `Bearer ${GITHUB_TOKEN}`;
     }
 
-    const repositories: GitHubRepository[] = await reposResponse.json();
+    // Fetch user repositories, paginating past the 100-per-page cap
+    const repositories: GitHubRepository[] = [];
+
+    for (let page = 1; page <= 5; page++) {
+      const reposResponse = await fetch(
+        `https://api.github.com/users/${targetUsername}/repos?per_page=100&page=${page}&sort=updated&direction=desc`,
+        { headers }
+      );
+
+      if (!reposResponse.ok) {
+        throw new Error(`GitHub API responded with status: ${reposResponse.status}`);
+      }
+
+      const batch: GitHubRepository[] = await reposResponse.json();
+      repositories.push(...batch);
+
+      if (batch.length < 100) break;
+    }
 
     // Filter and transform repositories for open source showcase
     const openSourceProjects = repositories
@@ -110,83 +115,12 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Error fetching open source projects:', error);
-    const targetUsername = GITHUB_USERNAME;
-    return NextResponse.json(generateMockOpenSourceProjects(targetUsername));
+    // Fail visibly rather than serving invented repositories.
+    return NextResponse.json(
+      { error: 'Failed to fetch open source projects from GitHub' },
+      { status: 502 }
+    );
   }
-}
-
-function generateMockOpenSourceProjects(username: string) {
-  const mockProjects = [
-    {
-      name: 'animation_search_bar',
-      description: 'A beautiful, customizable animated search bar widget for Flutter applications with extensive styling options and smooth animations.',
-      url: `https://github.com/${username}/animation_search_bar`,
-      homepage: 'https://pub.dev/packages/animation_search_bar',
-      stars: 42,
-      forks: 8,
-      language: 'Dart',
-      languageColor: '#00B4AB',
-      topics: ['flutter', 'animation', 'search', 'ui-components', 'dart-package'],
-      isContributor: true,
-      contributionType: 'owner' as const,
-      lastUpdated: new Date().toISOString(),
-      createdAt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      name: 'portfolio_js',
-      description: 'Modern, interactive portfolio website built with Next.js, featuring AI-powered chat, dynamic GitHub integration, and stunning glass morphism UI.',
-      url: `https://github.com/${username}/portfolio_js`,
-      homepage: 'https://blackshadow.dev',
-      stars: 28,
-      forks: 5,
-      language: 'TypeScript',
-      languageColor: '#2b7489',
-      topics: ['nextjs', 'portfolio', 'react', 'typescript', 'ai', 'glassmorphism'],
-      isContributor: true,
-      contributionType: 'owner' as const,
-      lastUpdated: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-      createdAt: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      name: 'flutter_mobile_app',
-      description: 'Cross-platform mobile application built with Flutter, featuring modern UI design and seamless user experience.',
-      url: `https://github.com/${username}/flutter_mobile_app`,
-      homepage: '',
-      stars: 15,
-      forks: 3,
-      language: 'Dart',
-      languageColor: '#00B4AB',
-      topics: ['flutter', 'mobile', 'cross-platform', 'ui-design'],
-      isContributor: true,
-      contributionType: 'owner' as const,
-      lastUpdated: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-      createdAt: new Date(Date.now() - 200 * 24 * 60 * 60 * 1000).toISOString()
-    },
-    {
-      name: 'javascript_algorithms',
-      description: 'Collection of JavaScript algorithms and data structures with detailed explanations and examples.',
-      url: `https://github.com/${username}/javascript_algorithms`,
-      homepage: '',
-      stars: 67,
-      forks: 12,
-      language: 'JavaScript',
-      languageColor: '#f1e05a',
-      topics: ['algorithms', 'data-structures', 'javascript', 'coding-interview'],
-      isContributor: true,
-      contributionType: 'owner' as const,
-      lastUpdated: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
-      createdAt: new Date(Date.now() - 300 * 24 * 60 * 60 * 1000).toISOString()
-    }
-  ];
-
-  return {
-    projects: mockProjects,
-    totalProjects: mockProjects.length,
-    totalStars: mockProjects.reduce((sum, proj) => sum + proj.stars, 0),
-    totalForks: mockProjects.reduce((sum, proj) => sum + proj.forks, 0),
-    languages: [...new Set(mockProjects.map(p => p.language))],
-    featuredProjects: mockProjects.slice(0, 3)
-  };
 }
 
 function getLanguageColor(language: string): string {

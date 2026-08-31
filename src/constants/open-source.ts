@@ -1,8 +1,10 @@
 export interface ContributionStats {
   totalContributions: number;
-  totalCommits: number;
-  totalPRs: number;
-  totalIssues: number;
+  // null when unavailable — these need an authenticated contributionsCollection
+  // query, and are reported as null rather than estimated.
+  totalCommits: number | null;
+  totalPRs: number | null;
+  totalIssues: number | null;
   totalStars: number;
   totalForks: number;
   totalRepos: number;
@@ -52,21 +54,21 @@ export const SAMPLE_CONTRIBUTION_STATS: ContributionStats = {
       repo: 'animation_search_bar',
       title: 'Enhanced animation search bar with new customization options',
       date: new Date().toISOString(),
-      url: 'https://github.com/blackshadowsoftwareltd/animation_search_bar'
+      url: 'https://github.com/RemonAhammad/animation_search_bar'
     },
     {
       type: 'pr',
       repo: 'portfolio_js',
       title: 'Added open source contributions showcase',
       date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      url: 'https://github.com/blackshadowsoftwareltd/portfolio_js'
+      url: 'https://github.com/RemonAhammad/portfolio_js'
     },
     {
       type: 'issue',
       repo: 'animation_search_bar',
       title: 'Feature request: Add more animation types',
       date: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
-      url: 'https://github.com/blackshadowsoftwareltd/animation_search_bar/issues'
+      url: 'https://github.com/RemonAhammad/animation_search_bar/issues'
     }
   ]
 };
@@ -75,7 +77,7 @@ export const SAMPLE_OPEN_SOURCE_PROJECTS: OpenSourceProject[] = [
   {
     name: 'animation_search_bar',
     description: 'A beautiful, customizable animated search bar widget for Flutter applications with extensive styling options and smooth animations.',
-    url: 'https://github.com/blackshadowsoftwareltd/animation_search_bar',
+    url: 'https://github.com/RemonAhammad/animation_search_bar',
     homepage: '',
     stars: 21,
     forks: 8,
@@ -89,7 +91,7 @@ export const SAMPLE_OPEN_SOURCE_PROJECTS: OpenSourceProject[] = [
 ];
 
 export const GITHUB_CONFIG = {
-  USERNAME: 'blackshadowsoftwareltd',
+  USERNAME: 'RemonAhammad',
   API_ENDPOINTS: {
     CONTRIBUTION_STATS: '/api/contribution-stats',
     OPEN_SOURCE_PROJECTS: '/api/open-source-projects'

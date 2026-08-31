@@ -1,187 +1,379 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_USERNAME = 'blackshadowsoftwareltd';
+const GITHUB_USERNAME = 'RemonAhammad';
+const GITHUB_GRAPHQL_ENDPOINT = 'https://api.github.com/graphql';
 
-interface GitHubRepository {
+interface RestRepository {
   name: string;
-  description: string;
   stargazers_count: number;
   forks_count: number;
-  language: string;
-  topics: string[];
-  html_url: string;
+  language: string | null;
+  size: number;
+  fork: boolean;
+}
+
+interface GitHubEvent {
+  type: string;
+  repo: { name: string };
   created_at: string;
-  updated_at: string;
-  owner: {
-    login: string;
+  payload: {
+    commits?: { message: string }[];
+    ref?: string;
+    size?: number;
+    head?: string;
+    pull_request?: { title: string; html_url: string };
+    issue?: { title: string; html_url: string };
+    release?: { name: string; html_url: string };
   };
 }
 
-interface GitHubLanguage {
-  [key: string]: number;
+type ActivityType = 'commit' | 'pr' | 'issue' | 'release';
+
+interface RecentActivity {
+  type: ActivityType;
+  repo: string;
+  title: string;
+  date: string;
+  url: string;
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    const { username } = await request.json();
-    const targetUsername = username || GITHUB_USERNAME;
+interface ContributionStats {
+  totalContributions: number;
+  // null when the metric is not obtainable — these come from the authenticated
+  // contributionsCollection API, so they stay null without a GITHUB_TOKEN
+  // rather than being estimated from the repo count.
+  totalCommits: number | null;
+  totalPRs: number | null;
+  totalIssues: number | null;
+  totalStars: number;
+  totalForks: number;
+  totalRepos: number;
+  languages: { name: string; percentage: number; color: string }[];
+  recentActivity: RecentActivity[];
+}
 
-    // If no GitHub token, return mock data
-    if (!GITHUB_TOKEN) {
-      console.warn('No GitHub token provided, returning mock contribution stats');
-      return NextResponse.json(generateMockContributionStats(targetUsername));
-    }
-
-    const headers = {
-      'Authorization': `Bearer ${GITHUB_TOKEN}`,
-      'Accept': 'application/vnd.github.v3+json',
-      'User-Agent': 'Portfolio-App',
-    };
-
-    // Fetch user repositories
-    const reposResponse = await fetch(
-      `https://api.github.com/users/${targetUsername}/repos?per_page=100&sort=stars&direction=desc`,
-      { headers }
-    );
-
-    if (!reposResponse.ok) {
-      console.warn(`GitHub API error: ${reposResponse.status}, returning mock data`);
-      return NextResponse.json(generateMockContributionStats(targetUsername));
-    }
-
-    const repositories: GitHubRepository[] = await reposResponse.json();
-
-    // Calculate statistics
-    const totalRepos = repositories.length;
-    const totalStars = repositories.reduce((sum, repo) => sum + repo.stargazers_count, 0);
-    const totalForks = repositories.reduce((sum, repo) => sum + repo.forks_count, 0);
-
-    // Get language statistics
-    const languageStats: { [key: string]: number } = {};
-    let totalSize = 0;
-
-    for (const repo of repositories.slice(0, 20)) { // Limit to top 20 repos to avoid rate limits
-      if (repo.language) {
-        try {
-          const langResponse = await fetch(
-            `https://api.github.com/repos/${targetUsername}/${repo.name}/languages`,
-            { headers }
-          );
-          
-          if (langResponse.ok) {
-            const languages: GitHubLanguage = await langResponse.json();
-            Object.entries(languages).forEach(([lang, size]) => {
-              languageStats[lang] = (languageStats[lang] || 0) + size;
-              totalSize += size;
-            });
+const CONTRIBUTION_STATS_QUERY = `
+  query($username: String!) {
+    user(login: $username) {
+      repositories(first: 100, ownerAffiliations: OWNER, privacy: PUBLIC, orderBy: {field: STARGAZERS, direction: DESC}) {
+        totalCount
+        nodes {
+          stargazerCount
+          forkCount
+          languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
+            edges {
+              size
+              node {
+                name
+                color
+              }
+            }
           }
-        } catch (error) {
-          console.warn(`Failed to fetch languages for ${repo.name}:`, error);
+        }
+      }
+      contributionsCollection {
+        totalCommitContributions
+        totalPullRequestContributions
+        totalIssueContributions
+        contributionCalendar {
+          totalContributions
         }
       }
     }
+  }
+`;
 
-    // Convert to percentages and get top 5
-    const languagePercentages = Object.entries(languageStats)
-      .map(([name, size]) => ({
-        name,
-        percentage: (size / totalSize) * 100,
-        color: getLanguageColor(name)
-      }))
-      .sort((a, b) => b.percentage - a.percentage)
-      .slice(0, 5);
+export async function POST(request: NextRequest) {
+  const { username } = await request.json().catch(() => ({ username: undefined }));
+  const targetUsername = username || GITHUB_USERNAME;
 
-    // Mock recent activity (you can enhance this with actual GitHub events API)
-    const recentActivity = [
-      {
-        type: 'commit' as const,
-        repo: 'animation_search_bar',
-        title: 'Enhanced animation search bar with new customization options',
-        date: new Date().toISOString(),
-        url: `https://github.com/${targetUsername}/animation_search_bar`
-      },
-      {
-        type: 'pr' as const,
-        repo: 'portfolio_js',
-        title: 'Added open source contributions showcase',
-        date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-        url: `https://github.com/${targetUsername}/portfolio_js`
-      },
-      {
-        type: 'issue' as const,
-        repo: 'animation_search_bar',
-        title: 'Feature request: Add more animation types',
-        date: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
-        url: `https://github.com/${targetUsername}/animation_search_bar/issues`
-      }
-    ];
+  try {
+    const stats = GITHUB_TOKEN
+      ? await fetchAuthenticatedStats(targetUsername)
+      : await fetchPublicStats(targetUsername);
 
-    const contributionStats = {
-      totalContributions: totalStars + totalForks + 150, // Estimated total contributions
-      totalCommits: repositories.length * 15, // Estimated
-      totalPRs: Math.floor(repositories.length * 2.5), // Estimated
-      totalIssues: Math.floor(repositories.length * 1.8), // Estimated
-      totalStars,
-      totalForks,
-      totalRepos,
-      languages: languagePercentages,
-      recentActivity
-    };
-
-    return NextResponse.json(contributionStats);
-
+    return NextResponse.json(stats);
   } catch (error) {
     console.error('Error fetching contribution stats:', error);
-    const targetUsername = GITHUB_USERNAME;
-    return NextResponse.json(generateMockContributionStats(targetUsername));
+    // Surface the failure instead of returning invented numbers — a portfolio
+    // showing plausible-but-wrong counts is worse than one showing an error.
+    return NextResponse.json(
+      { error: 'Failed to fetch contribution stats from GitHub' },
+      { status: 502 }
+    );
   }
 }
 
-function generateMockContributionStats(username: string) {
-  const mockLanguages = [
-    { name: 'JavaScript', percentage: 35.2, color: '#f1e05a' },
-    { name: 'TypeScript', percentage: 28.7, color: '#2b7489' },
-    { name: 'Python', percentage: 18.1, color: '#3572A5' },
-    { name: 'HTML', percentage: 10.5, color: '#e34c26' },
-    { name: 'CSS', percentage: 7.5, color: '#563d7c' },
-  ];
+async function fetchAuthenticatedStats(username: string): Promise<ContributionStats> {
+  const response = await fetch(GITHUB_GRAPHQL_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${GITHUB_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: CONTRIBUTION_STATS_QUERY,
+      variables: { username },
+    }),
+  });
 
-  const mockActivity = [
-    {
-      type: 'commit' as const,
-      repo: 'animation_search_bar',
-      title: 'Enhanced animation search bar with new customization options',
-      date: new Date().toISOString(),
-      url: `https://github.com/${username}/animation_search_bar`
-    },
-    {
-      type: 'pr' as const,
-      repo: 'portfolio_js',
-      title: 'Added open source contributions showcase',
-      date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-      url: `https://github.com/${username}/portfolio_js`
-    },
-    {
-      type: 'issue' as const,
-      repo: 'flutter_projects',
-      title: 'Feature request: Add more customization options',
-      date: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
-      url: `https://github.com/${username}/flutter_projects/issues`
+  if (!response.ok) {
+    throw new Error(`GitHub GraphQL responded with status: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  if (data.errors) {
+    throw new Error(`GitHub GraphQL errors: ${JSON.stringify(data.errors)}`);
+  }
+
+  const user = data.data?.user;
+
+  if (!user) {
+    throw new Error(`User not found: ${username}`);
+  }
+
+  const repos = user.repositories.nodes as {
+    stargazerCount: number;
+    forkCount: number;
+    languages: { edges: { size: number; node: { name: string; color: string | null } }[] };
+  }[];
+
+  // Real byte counts per language, summed across every public repository.
+  const languageBytes: Record<string, { size: number; color: string | null }> = {};
+
+  for (const repo of repos) {
+    for (const edge of repo.languages?.edges ?? []) {
+      const existing = languageBytes[edge.node.name];
+      languageBytes[edge.node.name] = {
+        size: (existing?.size ?? 0) + edge.size,
+        color: edge.node.color ?? existing?.color ?? null,
+      };
     }
-  ];
+  }
+
+  const contributions = user.contributionsCollection;
 
   return {
-    totalContributions: 1247,
-    totalCommits: 892,
-    totalPRs: 45,
-    totalIssues: 23,
-    totalStars: 156,
-    totalForks: 78,
-    totalRepos: 25,
-    languages: mockLanguages,
-    recentActivity: mockActivity
+    totalContributions: contributions.contributionCalendar.totalContributions,
+    totalCommits: contributions.totalCommitContributions,
+    totalPRs: contributions.totalPullRequestContributions,
+    totalIssues: contributions.totalIssueContributions,
+    totalStars: repos.reduce((sum, repo) => sum + repo.stargazerCount, 0),
+    totalForks: repos.reduce((sum, repo) => sum + repo.forkCount, 0),
+    totalRepos: user.repositories.totalCount,
+    languages: toLanguagePercentages(languageBytes),
+    recentActivity: await fetchRecentActivity(username),
   };
+}
+
+async function fetchPublicStats(username: string): Promise<ContributionStats> {
+  console.warn(
+    'No GITHUB_TOKEN set — commit/PR/issue counts are unavailable on the public API and will be reported as null.'
+  );
+
+  const repos = await fetchAllPublicRepos(username);
+
+  // The unauthenticated REST list only exposes each repo's *primary* language,
+  // so weight it by repo size. Less precise than the authenticated byte counts,
+  // but derived from real data rather than invented.
+  const languageBytes: Record<string, { size: number; color: string | null }> = {};
+
+  for (const repo of repos) {
+    if (!repo.language) continue;
+    const existing = languageBytes[repo.language];
+    languageBytes[repo.language] = {
+      size: (existing?.size ?? 0) + repo.size,
+      color: getLanguageColor(repo.language),
+    };
+  }
+
+  return {
+    totalContributions: await fetchPublicContributionTotal(username),
+    totalCommits: null,
+    totalPRs: null,
+    totalIssues: null,
+    totalStars: repos.reduce((sum, repo) => sum + repo.stargazers_count, 0),
+    totalForks: repos.reduce((sum, repo) => sum + repo.forks_count, 0),
+    totalRepos: repos.length,
+    languages: toLanguagePercentages(languageBytes),
+    recentActivity: await fetchRecentActivity(username),
+  };
+}
+
+async function fetchAllPublicRepos(username: string): Promise<RestRepository[]> {
+  const repos: RestRepository[] = [];
+
+  // Paginate — the account can hold more than one page of repositories.
+  for (let page = 1; page <= 5; page++) {
+    const response = await fetch(
+      `https://api.github.com/users/${username}/repos?per_page=100&page=${page}&type=owner`,
+      { headers: restHeaders() }
+    );
+
+    if (!response.ok) {
+      throw new Error(`GitHub REST responded with status: ${response.status}`);
+    }
+
+    const batch: RestRepository[] = await response.json();
+    repos.push(...batch);
+
+    if (batch.length < 100) break;
+  }
+
+  return repos;
+}
+
+// Mirrors the rolling 365-day window the contribution heatmap renders, so the
+// two panels agree.
+async function fetchPublicContributionTotal(username: string): Promise<number> {
+  const response = await fetch(`https://github-contributions-api.jogruber.de/v4/${username}`, {
+    headers: { 'User-Agent': 'Portfolio-App' },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Public contributions API responded with status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const today = new Date();
+  const oneYearAgo = new Date(today);
+  oneYearAgo.setFullYear(today.getFullYear() - 1);
+
+  return (data.contributions ?? [])
+    .filter((day: { date: string }) => {
+      const date = new Date(day.date);
+      return date >= oneYearAgo && date <= today;
+    })
+    .reduce((sum: number, day: { count: number }) => sum + day.count, 0);
+}
+
+async function fetchRecentActivity(username: string): Promise<RecentActivity[]> {
+  try {
+    const response = await fetch(
+      `https://api.github.com/users/${username}/events/public?per_page=30`,
+      { headers: restHeaders() }
+    );
+
+    if (!response.ok) return [];
+
+    const events: GitHubEvent[] = await response.json();
+
+    const seen = new Set<string>();
+
+    return events
+      .map(toActivity)
+      .filter((activity): activity is RecentActivity => activity !== null)
+      .filter((activity) => {
+        const key = `${activity.type}:${activity.repo}:${activity.title}:${activity.date.slice(0, 10)}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .slice(0, 6);
+  } catch (error) {
+    console.warn('Failed to fetch recent activity:', error);
+    return [];
+  }
+}
+
+function toActivity(event: GitHubEvent): RecentActivity | null {
+  const repo = event.repo.name.split('/').pop() ?? event.repo.name;
+  const repoUrl = `https://github.com/${event.repo.name}`;
+
+  switch (event.type) {
+    case 'PushEvent': {
+      // The public events feed often omits `commits` and `size`, so fall back
+      // through message -> count -> a plain "pushed" line rather than printing
+      // a bogus "0 commits".
+      const commits = event.payload.commits ?? [];
+      const message = commits[commits.length - 1]?.message?.split('\n')[0];
+      const branch = event.payload.ref?.replace('refs/heads/', '');
+      const count = event.payload.size ?? commits.length;
+
+      let title: string;
+      if (message) {
+        title = message;
+      } else if (count > 0) {
+        title = `Pushed ${count} commit${count === 1 ? '' : 's'}${branch ? ` to ${branch}` : ''}`;
+      } else {
+        title = `Pushed${branch ? ` to ${branch}` : ''}`;
+      }
+
+      return {
+        type: 'commit',
+        repo,
+        title,
+        date: event.created_at,
+        url: event.payload.head
+          ? `${repoUrl}/commit/${event.payload.head}`
+          : `${repoUrl}/commits${branch ? `/${branch}` : ''}`,
+      };
+    }
+    case 'PullRequestEvent':
+      return event.payload.pull_request
+        ? {
+            type: 'pr',
+            repo,
+            title: event.payload.pull_request.title,
+            date: event.created_at,
+            url: event.payload.pull_request.html_url,
+          }
+        : null;
+    case 'IssuesEvent':
+      return event.payload.issue
+        ? {
+            type: 'issue',
+            repo,
+            title: event.payload.issue.title,
+            date: event.created_at,
+            url: event.payload.issue.html_url,
+          }
+        : null;
+    case 'ReleaseEvent':
+      return event.payload.release
+        ? {
+            type: 'release',
+            repo,
+            title: event.payload.release.name || `Released ${repo}`,
+            date: event.created_at,
+            url: event.payload.release.html_url,
+          }
+        : null;
+    default:
+      return null;
+  }
+}
+
+function toLanguagePercentages(
+  languageBytes: Record<string, { size: number; color: string | null }>
+): { name: string; percentage: number; color: string }[] {
+  const total = Object.values(languageBytes).reduce((sum, lang) => sum + lang.size, 0);
+
+  if (total === 0) return [];
+
+  return Object.entries(languageBytes)
+    .map(([name, { size, color }]) => ({
+      name,
+      percentage: (size / total) * 100,
+      color: color ?? getLanguageColor(name),
+    }))
+    .sort((a, b) => b.percentage - a.percentage)
+    .slice(0, 5);
+}
+
+function restHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    Accept: 'application/vnd.github.v3+json',
+    'User-Agent': 'Portfolio-App',
+  };
+
+  if (GITHUB_TOKEN) {
+    headers.Authorization = `Bearer ${GITHUB_TOKEN}`;
+  }
+
+  return headers;
 }
 
 function getLanguageColor(language: string): string {
@@ -198,6 +390,7 @@ function getLanguageColor(language: string): string {
     'Kotlin': '#F18E33',
     'C++': '#f34b7d',
     'C': '#555555',
+    'CMake': '#DA3434',
     'Go': '#00ADD8',
     'Rust': '#dea584',
     'PHP': '#4F5D95',
@@ -207,6 +400,6 @@ function getLanguageColor(language: string): string {
     'Vue': '#4FC08D',
     'React': '#61DAFB'
   };
-  
+
   return colors[language] || '#8B5A2B';
 }

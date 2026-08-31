@@ -18,7 +18,7 @@ interface ContributionsData {
   weeks: ContributionWeek[];
 }
 
-const GITHUB_USERNAME = 'blackshadowsoftwareltd';
+const GITHUB_USERNAME = 'RemonAhammad';
 
 const getContributionLevel = (count: number): string => {
   if (count === 0) return 'bg-neutral-100 dark:bg-neutral-800 blur-[0.5px] opacity-60';
@@ -115,7 +115,6 @@ export default function GitHubContributions() {
     );
   }
 
-  const currentYear = new Date().getFullYear();
   const firstWeek = contributionsData.weeks[0];
   const firstDay = firstWeek?.contributionDays[0];
   const startDate = firstDay ? new Date(firstDay.date) : new Date();
@@ -323,7 +322,7 @@ export default function GitHubContributions() {
         </h2>
         <div className="flex items-center gap-3">
           <span className="text-xs text-neutral-600 dark:text-neutral-400">
-            {contributionsData.totalContributions} contributions in {currentYear}
+            {contributionsData.totalContributions} contributions in the last year
           </span>
           <a
             href={`https://github.com/${GITHUB_USERNAME}`}

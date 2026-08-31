@@ -15,8 +15,6 @@ import {
 import { 
   ContributionStats, 
   OpenSourceProject, 
-  SAMPLE_CONTRIBUTION_STATS, 
-  SAMPLE_OPEN_SOURCE_PROJECTS, 
   GITHUB_CONFIG 
 } from '@/constants/open-source';
 
@@ -44,13 +42,11 @@ export default function OpenSourceContributions() {
         body: JSON.stringify({ username: GITHUB_CONFIG.USERNAME }),
       });
 
-      if (statsResponse.ok) {
-        const statsData = await statsResponse.json();
-        setStats(statsData);
-      } else {
-        // Fallback sample data
-        setStats(SAMPLE_CONTRIBUTION_STATS);
+      if (!statsResponse.ok) {
+        throw new Error('Could not load contribution stats from GitHub');
       }
+
+      setStats(await statsResponse.json());
 
       // Fetch open source projects
       const projectsResponse = await fetch(GITHUB_CONFIG.API_ENDPOINTS.OPEN_SOURCE_PROJECTS, {
@@ -59,24 +55,24 @@ export default function OpenSourceContributions() {
         body: JSON.stringify({ username: GITHUB_CONFIG.USERNAME }),
       });
 
-      if (projectsResponse.ok) {
-        const projectsData = await projectsResponse.json();
-        setProjects(projectsData.projects || []);
-      } else {
-        // Fallback sample data
-        setProjects(SAMPLE_OPEN_SOURCE_PROJECTS);
+      if (!projectsResponse.ok) {
+        throw new Error('Could not load open source projects from GitHub');
       }
+
+      const projectsData = await projectsResponse.json();
+      setProjects(projectsData.projects || []);
     } catch (err) {
+      // Showing an error beats showing invented numbers as if they were real.
       setError(err instanceof Error ? err.message : 'Failed to load data');
-      // Use sample data as fallback
-      setStats(SAMPLE_CONTRIBUTION_STATS);
-      setProjects(SAMPLE_OPEN_SOURCE_PROJECTS);
+      setStats(null);
+      setProjects([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const formatNumber = (num: number) => {
+  const formatNumber = (num: number | null) => {
+    if (num === null || num === undefined) return '—';
     if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
     if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
     return num.toString();
@@ -173,6 +169,12 @@ export default function OpenSourceContributions() {
           </button>
         ))}
       </div>
+
+      {error && (
+        <div className="mb-6 rounded-lg border border-red-200/40 bg-red-500/5 p-4 dark:border-red-900/40">
+          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+        </div>
+      )}
 
       {/* Content */}
       {activeTab === 'overview' && (

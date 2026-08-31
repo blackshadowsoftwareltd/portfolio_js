@@ -128,24 +128,11 @@ export async function POST(request: NextRequest) {
 // Fallback function when no GitHub token is available
 async function fetchRepositoriesWithoutToken(username: string, sortBy: string = 'stars') {
   try {
-    // Map sortBy to REST API parameters
-    const getRestSortConfig = (sortBy: string) => {
-      switch (sortBy) {
-        case 'stars':
-          return { sort: 'stars', direction: 'desc' };
-        case 'updated':
-          return { sort: 'updated', direction: 'desc' };
-        case 'created':
-          return { sort: 'created', direction: 'desc' };
-        default:
-          return { sort: 'stars', direction: 'desc' };
-      }
-    };
-
-    const { sort, direction } = getRestSortConfig(sortBy);
-    
-    // Use GitHub's REST API which has higher rate limits for public data
-    const restApiUrl = `https://api.github.com/users/${username}/repos?sort=${sort}&direction=${direction}&per_page=8&type=public`;
+    // NOTE: the REST repos endpoint accepts sort=created|updated|pushed|full_name
+    // only. Passing sort=stars makes GitHub silently fall back to `created`, so
+    // asking for 8 rows returned the 8 newest repos and the star sort below only
+    // reordered those. Pull the full list and rank it here instead.
+    const restApiUrl = `https://api.github.com/users/${username}/repos?sort=updated&direction=desc&per_page=100&type=public`;
     
     const response = await fetch(restApiUrl, {
       headers: {
@@ -198,7 +185,7 @@ async function fetchRepositoriesWithoutToken(username: string, sortBy: string = 
       }
     });
 
-    return NextResponse.json({ repositories: sortedRepos });
+    return NextResponse.json({ repositories: sortedRepos.slice(0, 8) });
   } catch (error) {
     console.error('Error fetching from REST API:', error);
     
