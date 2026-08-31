@@ -16,71 +16,10 @@ interface Experience {
   logo?: string;
 }
 
-const experiences: Experience[] = [
-  {
-    id: "1",
-    company: "Tech Solutions Inc.",
-    position: "Senior Full Stack Developer",
-    location: "San Francisco, CA",
-    duration: "Jan 2023 - Present",
-    type: "Full-time",
-    description: [
-      "Led development of scalable web applications serving 100k+ users",
-      "Architected microservices infrastructure using Node.js and Docker",
-      "Mentored junior developers and conducted code reviews",
-      "Implemented CI/CD pipelines reducing deployment time by 60%"
-    ],
-    technologies: ["React", "Next.js", "Node.js", "TypeScript", "PostgreSQL", "Docker", "AWS"],
-    website: "https://techsolutions.com"
-  },
-  {
-    id: "2",
-    company: "Digital Innovations LLC",
-    position: "Frontend Developer",
-    location: "New York, NY",
-    duration: "Jun 2021 - Dec 2022",
-    type: "Full-time",
-    description: [
-      "Built responsive web applications using React and TypeScript",
-      "Collaborated with design team to implement pixel-perfect UI components",
-      "Optimized application performance resulting in 40% faster load times",
-      "Integrated RESTful APIs and GraphQL endpoints"
-    ],
-    technologies: ["React", "TypeScript", "Sass", "GraphQL", "Jest", "Webpack"],
-    website: "https://digitalinnovations.com"
-  },
-  {
-    id: "3",
-    company: "StartupXYZ",
-    position: "Junior Web Developer",
-    location: "Austin, TX",
-    duration: "Sep 2020 - May 2021",
-    type: "Full-time",
-    description: [
-      "Developed and maintained e-commerce platform features",
-      "Fixed bugs and implemented new functionality based on user feedback",
-      "Participated in agile development process and daily standups",
-      "Learned modern web development best practices"
-    ],
-    technologies: ["JavaScript", "HTML5", "CSS3", "PHP", "MySQL", "Bootstrap"],
-    website: "https://startupxyz.com"
-  },
-  {
-    id: "4",
-    company: "Freelance",
-    position: "Web Developer",
-    location: "Remote",
-    duration: "Jan 2020 - Aug 2020",
-    type: "Contract",
-    description: [
-      "Built custom websites for small businesses and entrepreneurs",
-      "Provided ongoing maintenance and support for client projects",
-      "Managed project timelines and client communications",
-      "Delivered projects on time and within budget"
-    ],
-    technologies: ["WordPress", "JavaScript", "PHP", "HTML5", "CSS3", "MySQL"]
-  }
-];
+// Fabricated placeholder roles ("Tech Solutions Inc.", "Digital Innovations LLC",
+// "StartupXYZ", a Freelance stint) were removed — none of them were real. Add
+// genuine entries here and the timeline renders again.
+const experiences: Experience[] = [];
 
 export default function Experience() {
   const containerVariants = {
@@ -121,6 +60,17 @@ export default function Experience() {
             My journey through the tech industry
           </p>
         </motion.div>
+
+        {experiences.length === 0 && (
+          <motion.div
+            variants={itemVariants}
+            className="rounded-2xl border border-dashed border-gray-300 p-8 text-center dark:border-gray-700"
+          >
+            <p className="text-gray-600 dark:text-gray-300">
+              Experience details coming soon.
+            </p>
+          </motion.div>
+        )}
 
         <div className="space-y-6">
           {experiences.map((exp, index) => (

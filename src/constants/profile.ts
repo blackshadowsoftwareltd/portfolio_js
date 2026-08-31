@@ -26,7 +26,7 @@ export const PROFILE_DATA = {
     {
       name: 'Email',
       command: 'send email',
-      url: 'mailto:blackshadowsoftwareltd@gmail.com',
+      url: 'mailto:nextr72@gmail.com',
       icon: 'Mail'
     }
   ]
