@@ -189,16 +189,6 @@ export default function Home() {
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pb-10 md:pb-20" suppressHydrationWarning={true}>
-      {/* big blurred footer word */}
-      {/* <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center overflow-hidden">
-        <div
-          className="hidden bg-gradient-to-b from-neutral-500/10 to-neutral-500/0 bg-clip-text text-[10rem] leading-none font-black text-transparent select-none sm:block lg:text-[16rem]"
-          style={{ marginBottom: '-2.5rem' }}
-        >
-          Toukoum
-        </div>
-      </div> */}
-
       {/* GitHub button */}
       {/* <div className="absolute top-6 right-8 z-20">
         <GitHubButton
@@ -223,37 +213,6 @@ export default function Home() {
           </span>
           need an intern?
         </button>
-      </div> */}
-
-      {/* header */}
-      {/* <motion.div
-        className="z-1 mb-8 flex flex-col items-center text-center md:mb-12 mt-24 md:mt-4"
-        variants={topElementVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="z-100">
-          <WelcomeModal />
-        </div>
-
-        <h2 className="text-secondary-foreground mt-1 text-xl font-semibold md:text-2xl">
-          Hey, I'm Raphael 👋
-        </h2>
-        <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">
-          AI portfolio
-        </h1>
-      </motion.div> */}
-
-      {/* centre memoji */}
-      {/* <div className="relative z-10 h-52 w-48 overflow-hidden sm:h-72 sm:w-72">
-        <Image
-          src="/landing-memojis.png"
-          alt="Hero memoji"
-          width={2000}
-          height={2000}
-          priority
-          className="translate-y-14 scale-[2] object-cover"
-        />
       </div> */}
 
       {/* input + quick buttons */}

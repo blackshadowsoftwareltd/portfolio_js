@@ -1,32 +1,36 @@
+import { RESUME } from '@/constants/resume';
+
+// Identity is single-sourced from the CV in src/constants/resume.ts so the
+// landing page, the contact card and the chat persona can never disagree.
 export const PROFILE_DATA = {
-  name: "Rimon Ahammad",
-  email: "nextr72@gmail.com",
-  designation: "Jr Software Engineer (Flutter, 🦀Rust, Go)",
-  description: `Hi, I'm Remon Ahammad, a professional Android and IOS App Developer with 3 years of experience. I create high-quality mobile applications using Dart and Flutter Framework. I'm also proficient in Rust, a fast and memory-efficient language that can power performance-critical services.`,
-  
+  name: RESUME.name,
+  email: RESUME.email,
+  designation: RESUME.title,
+  description: RESUME.summary,
+
   socialMedia: [
     {
       name: 'GitHub',
       command: 'open github',
-      url: 'https://github.com/RemonAhammad',
+      url: RESUME.github,
       icon: 'Github'
     },
     {
-      name: 'LinkedIn', 
+      name: 'LinkedIn',
       command: 'open linkedin',
-      url: 'https://bd.linkedin.com/in/remonahammad',
+      url: RESUME.linkedin,
       icon: 'Linkedin'
     },
     {
       name: 'Telegram',
-      command: 'open telegram', 
-      url: 'https://t.me/remonahammad',
+      command: 'open telegram',
+      url: RESUME.telegram,
       icon: 'Send'
     },
     {
       name: 'Email',
       command: 'send email',
-      url: 'mailto:nextr72@gmail.com',
+      url: `mailto:${RESUME.email}`,
       icon: 'Mail'
     }
   ]

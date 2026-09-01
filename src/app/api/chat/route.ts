@@ -11,9 +11,7 @@ import { getPresentation } from './tools/getPresentation';
 import { getResume } from './tools/getResume';
 import { getContact } from './tools/getContact';
 import { getSkills } from './tools/getSkills';
-import { getSports } from './tools/getSport';
-import { getCrazy } from './tools/getCrazy';
-import { getInternship } from './tools/getIntership';
+import { getExperience } from './tools/getExperience';
 
 export const maxDuration = 30;
 
@@ -53,9 +51,7 @@ export async function POST(req: Request) {
       getResume,
       getContact,
       getSkills,
-      getSports,
-      getCrazy,
-      getInternship,
+      getExperience,
     };
 
     const result = streamText({

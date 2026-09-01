@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Award, Code, GraduationCap, Mail, MessageSquare } from 'lucide-react';
 import React from 'react';
+import { RESUME } from '@/constants/resume';
 
 interface ChatLandingProps {
   submitQuery: (query: string) => void;
@@ -22,6 +23,10 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery }) => {
     {
       icon: <Award className="h-4 w-4" />,
       text: 'What are your skills?',
+    },
+    {
+      icon: <GraduationCap className="h-4 w-4" />,
+      text: 'Where have you worked?',
     },
     {
       icon: <Mail className="h-4 w-4" />,
@@ -59,10 +64,10 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery }) => {
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <h2 className="mb-3 text-2xl font-semibold">
-          I'm Raphael's digital twin
+          I&apos;m {RESUME.name.split(' ')[0]}&apos;s digital twin
         </h2>
         <p className="text-muted-foreground mx-auto max-w-md">
-          The first portfolio that fit YOU needs.
+          Ask me anything about my work, my stack, or my experience.
         </p>
       </motion.div>
 

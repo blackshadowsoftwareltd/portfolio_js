@@ -40,16 +40,19 @@ repo; `.gitignore` also covers `*.gguf`, `/models/` and friends). The route heal
 Ollama first and returns **503 with a readable message** when it is not running, rather than a
 connection stack trace in the chat UI.
 
-## Origin and identity split
+## Origin and identity
 
-This project is a rebrand of the open-source `toukoum/portfolio` AI-memoji portfolio (originally Raphaël Giraud's). The rebrand to **Rimon Ahammad / RemonAhammad** is partial, and this is the single biggest source of confusion when reading the code:
+This project began as a rebrand of the open-source `toukoum/portfolio` AI-memoji portfolio (originally Raphaël Giraud's). **The upstream author's identity has been removed** — persona, biography, photos, project cards, resume PDF and credit links are all gone, along with the tools that only made sense for him (`getSport`, `getCrazy`, `getInternship`).
 
-- `src/app/api/chat/prompt.ts` is still **entirely Raphaël's persona and biography** (42 Paris, LightOn AI, mountain biking, French expressions). The `/chat` page will answer as Raphaël.
-- `src/app/layout.tsx` metadata mixes both: title `"Remon Ahammad"` but `authors`/`creator`/`openGraph.url` still point at Toukoum / toukoum.fr.
-- The name is spelled both "Remon" and "Rimon" across files.
-- `public/` still holds the original owner's memojis, photos, resume PDF, and project screenshots.
+**`src/constants/resume.ts` is the single source of truth for personal data.** It holds Rimon Ahammad's CV — identity, summary, skills, experience, education, projects — and everything else reads from it:
 
-When asked to update "my info," check whether the request means `src/constants/` (new data) or `prompt.ts` / `layout.tsx` (legacy data), and say which you changed.
+- `src/app/api/chat/prompt.ts` composes the chat persona from `RESUME`, so the AI's answers can't drift from the rendered cards
+- `src/constants/profile.ts`, `src/constants/projects.ts` re-export from it
+- `presentation.tsx`, `skills.tsx`, `experience.tsx`, `resume.tsx`, `projects/AllProjects.tsx` all render from it
+
+Add or correct a fact there, not in a component. The prompt explicitly instructs the model to say "I don't know" rather than invent anything absent from that file.
+
+Residual inconsistency: the name is spelled both "Remon" (GitHub username `RemonAhammad`, Telegram, LinkedIn slug) and "Rimon" (display name). The username spellings are real account handles — don't "fix" them.
 
 ## Architecture
 
@@ -66,11 +69,13 @@ Panel mechanics, all inside `page.tsx`:
 - Panel content is remounted on open via `key={showX ? 'open' : 'closed'}` to re-trigger entry animations.
 - `page.tsx:312` computes the active flag with `eval(\`show${...}\`)` reading local `useState` variables. It works only because the state variable names are in scope at that point — renaming a state variable or moving the map breaks it silently at runtime, not at compile time.
 
-**`/chat` (`src/components/chat/chat.tsx`)** — the inherited AI-memoji chat, reached only by direct URL now that the landing page's chat entry points are commented out. Uses `useChat` from `@ai-sdk/react`, reads an initial `?query=` param, and drives a talking-head `<video>` (with an iOS `<img>` fallback).
+**`/chat` (`src/components/chat/chat.tsx`)** — the inherited full-page chat, reached only by direct URL now that the landing page hosts the conversation inline in `center-chatbox.tsx`. Uses `useChat` from `@ai-sdk/react` and reads an initial `?query=` param. The talking-head memoji `<video>` was the upstream author's face and is gone; the avatar is now a monogram, so `videoRef` and `isTalking` are inert leftovers.
 
 ### Chat tool pipeline
 
-Server (`src/app/api/chat/route.ts`) → `streamText` with `gpt-4o-mini`, `maxSteps: 2`, `toolCallStreaming: true`. `SYSTEM_PROMPT` is `unshift`ed onto the incoming messages.
+Server (`src/app/api/chat/route.ts`) → `streamText` with the model from `model.ts` (Ollama by default), `maxSteps: 2`, `toolCallStreaming: true`. `SYSTEM_PROMPT` is `unshift`ed onto the incoming messages.
+
+Wired tools: `getPresentation`, `getExperience`, `getProjects`, `getSkills`, `getResume`, `getContact`.
 
 Tools do **not** return the content the user sees. Each tool in `src/app/api/chat/tools/` returns a short throwaway string; the actual UI is a React component picked by `toolName` in `src/components/chat/tool-renderer.tsx`. The system prompt reinforces this ("the tool already provides a response so you don't need to repeat the information").
 
@@ -97,12 +102,11 @@ The username `RemonAhammad` is hardcoded in seven places (plus `constants/projec
 ### Where content lives
 
 Split, inconsistently:
-- `src/constants/profile.ts` — name, designation, bio, social links (drives `TerminalTyping`)
+- `src/constants/resume.ts` — **the CV: identity, summary, skills, experience, education, projects.** Everything personal comes from here
+- `src/constants/profile.ts` — re-exports name/email/designation/socials from `RESUME` (drives `TerminalTyping`)
+- `src/constants/projects.ts` — derives `projectsData` from `RESUME.projects` plus a category-colour helper
 - `src/constants/tools.ts` — the tech-stack grid
-- `src/constants/projects.ts` — **placeholder** projects ("Flutter E-commerce App", "Rust Web Server", …) pointing at repos that may not exist
 - `src/constants/open-source.ts` — types, `GITHUB_CONFIG`, and sample fallback data
-- `src/components/experience.tsx` — job history hardcoded inside the component, still **placeholder** ("Tech Solutions Inc.", "StartupXYZ")
-- `src/components/projects/Data.tsx` — the original owner's project cards for the `/chat` carousel
 
 ## Config quirks
 

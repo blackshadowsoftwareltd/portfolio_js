@@ -2,10 +2,9 @@ import { tool } from 'ai';
 import { z } from 'zod';
 
 export const getContact = tool({
-  description:
-    'This tool show a my contact informations.',
+  description: 'Shows my contact information and social links.',
   parameters: z.object({}),
   execute: async () => {
-    return "Here is my contact informations above, Feel free to contact me I will be happy to answer you 😉";
+    return "Here's how to reach me — feel free to get in touch 😉";
   },
 });

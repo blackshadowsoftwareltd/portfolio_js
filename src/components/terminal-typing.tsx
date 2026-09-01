@@ -103,10 +103,6 @@ ${PROFILE_DATA.description}`;
           opacity: 1, 
           x: 0
         }}
-        transition={{ 
-          opacity: { duration: 0.8, delay: 0.5 },
-          x: { duration: 0.8, delay: 0.5 }
-        }}
         onClick={() => setIsExpanded(!isExpanded)}
         className="group fixed top-16 left-4 z-50 flex flex-col rounded-2xl overflow-hidden cursor-pointer max-w-[calc(100vw-2rem)] sm:top-4 sm:left-20 sm:max-w-sm"
         style={{

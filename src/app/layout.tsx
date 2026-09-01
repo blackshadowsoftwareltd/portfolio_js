@@ -12,41 +12,45 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+const SITE_URL = "https://portfolio.blackshadow.software";
+const SITE_DESCRIPTION =
+  "Interactive AI portfolio for Rimon Ahammad — Flutter and Rust engineer. Ask it anything about my work, stack and experience.";
+
 export const metadata: Metadata = {
-  title: "Remon Ahammad",
-  description: "Interactive portfolio with an AI-powered Memoji that answers questions about me, my skills, and my experience",
+  title: "Rimon Ahammad",
+  description: SITE_DESCRIPTION,
   keywords: [
-    "Toukoum", 
-    "Portfolio", 
-    "Developer", 
-    "AI", 
-    "Interactive", 
-    "Memoji", 
-    "Web Development",
+    "Rimon Ahammad",
+    "Portfolio",
+    "Software Engineer",
+    "Rust",
+    "Flutter",
+    "Dart",
+    "WebRTC",
+    "FFI",
     "Full Stack",
     "Next.js",
     "React"
   ],
   authors: [
     {
-      name: "Toukoum",
-      url: "https://toukoum.fr",
+      name: "Rimon Ahammad",
+      url: "https://github.com/RemonAhammad",
     },
   ],
-  creator: "Toukoum",
+  creator: "Rimon Ahammad",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://toukoum.fr",
-    title: "Remon Ahammad",
-    description: "Interactive portfolio with an AI-powered Memoji that answers questions about me",
-    siteName: "Remon Ahammad",
+    url: SITE_URL,
+    title: "Rimon Ahammad",
+    description: SITE_DESCRIPTION,
+    siteName: "Rimon Ahammad",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Remon Ahammad",
-    description: "Interactive portfolio with an AI-powered Memoji that answers questions about me",
-    creator: "@toukoum",
+    title: "Rimon Ahammad",
+    description: SITE_DESCRIPTION,
   },
   icons: {
     icon: [

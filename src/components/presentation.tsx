@@ -1,23 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import { Github, Linkedin, Mail, MapPin } from 'lucide-react';
 import React from 'react';
+import { RESUME } from '@/constants/resume';
 
 export function Presentation() {
-  // Personal information
-  const profile = {
-    name: 'Raphael Giraud',
-    age: '21 years old',
-    location: 'Paris, France',
-    // Add a newline character after the emoji
-    description:
-      "Hey 👋\nI'm Raph also known as Toukoum. I'm a developer specializing in AI at 42 Paris. I'm working at LightOn AI in Paris. I'm passionate about AI, tech, Entrepreneurship and SaaS tech.",
-    src: '/profil-raph.png',
-    fallbackSrc:
-      'https://images.unsplash.com/photo-1610216705422-caa3fcb6d158?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3',
-  };
-
   // Animation variants for text elements
   const textVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -42,80 +30,73 @@ export function Presentation() {
     },
   };
 
+  const links = [
+    { label: 'GitHub', href: RESUME.github, icon: Github },
+    { label: 'LinkedIn', href: RESUME.linkedin, icon: Linkedin },
+    { label: 'Email', href: `mailto:${RESUME.email}`, icon: Mail },
+  ];
+
   return (
-    <div className="mx-auto w-full max-w-5xl py-6 font-sans">
-      <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2">
-        {/* Image section */}
-        <div className="relative mx-auto aspect-square w-full max-w-sm">
-          <div className="relative h-full w-full overflow-hidden rounded-2xl">
-            <motion.div
-              initial={{ scale: 0.92, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
-              className="h-full w-full"
-            >
-              <Image
-                src={profile.src}
-                alt={profile.name}
-                width={500}
-                height={500}
-                className="h-full w-full object-cover object-center"
-                onError={(e) => {
-                  // Fallback to placeholder if image fails to load
-                  const target = e.target as HTMLImageElement;
-                  target.src = profile.fallbackSrc;
-                }}
-              />
-            </motion.div>
-          </div>
+    <div className="mx-auto w-full max-w-3xl py-6 font-sans">
+      <motion.div initial="hidden" animate="visible" variants={textVariants}>
+        <h1 className="from-foreground to-muted-foreground bg-gradient-to-r bg-clip-text text-2xl font-semibold text-transparent md:text-4xl">
+          {RESUME.name}
+        </h1>
+        <p className="text-muted-foreground mt-2 text-base md:text-lg">
+          {RESUME.title}
+        </p>
+        <div className="text-muted-foreground mt-2 flex items-center gap-1.5 text-sm">
+          <MapPin className="h-4 w-4" />
+          <span>{RESUME.location}</span>
         </div>
+      </motion.div>
 
-        {/* Text content section */}
-        <div className="flex flex-col space-y">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={textVariants}
-          >
-            <h1 className="from-foreground to-muted-foreground bg-gradient-to-r bg-clip-text text-xl font-semibold text-transparent md:text-3xl">
-              {profile.name}
-            </h1>
-            <div className="mt-1 flex flex-col gap-1 md:flex-row md:items-center md:gap-4">
-              <p className="text-muted-foreground">{profile.age}</p>
-              <div className="bg-border hidden h-1.5 w-1.5 rounded-full md:block" />
-              <p className="text-muted-foreground">{profile.location}</p>
-            </div>
-          </motion.div>
+      <motion.p
+        initial="hidden"
+        animate="visible"
+        variants={paragraphAnimation}
+        className="text-foreground mt-6 leading-relaxed"
+      >
+        {RESUME.summary}
+      </motion.p>
 
-          <motion.p
-            initial="hidden"
-            animate="visible"
-            variants={paragraphAnimation}
-            className="text-foreground mt-6 leading-relaxed whitespace-pre-line"
+      {/* Tags/Keywords */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+        className="mt-6 flex flex-wrap gap-2"
+      >
+        {RESUME.tags.map((tag) => (
+          <span
+            key={tag}
+            className="bg-secondary text-secondary-foreground rounded-full px-3 py-1 text-sm"
           >
-            {profile.description}
-          </motion.p>
+            {tag}
+          </span>
+        ))}
+      </motion.div>
 
-          {/* Tags/Keywords */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            className="mt-4 flex flex-wrap gap-2"
+      {/* Links */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.7, duration: 0.5 }}
+        className="mt-6 flex flex-wrap gap-3"
+      >
+        {links.map(({ label, href, icon: Icon }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border-border text-foreground hover:bg-secondary flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors"
           >
-            {['AI', 'Developer', '42 Paris', 'Sport', 'SaaS Builder'].map(
-              (tag) => (
-                <span
-                  key={tag}
-                  className="bg-secondary text-secondary-foreground rounded-full px-3 py-1 text-sm"
-                >
-                  {tag}
-                </span>
-              )
-            )}
-          </motion.div>
-        </div>
-      </div>
+            <Icon className="h-4 w-4" />
+            {label}
+          </a>
+        ))}
+      </motion.div>
     </div>
   );
 }

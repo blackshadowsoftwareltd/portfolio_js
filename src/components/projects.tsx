@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Github, Calendar, Star, GitFork, ArrowUpRight } from 'lucide-react';
-import { projectsData, getStatusColor, getCategoryColor } from '@/constants/projects';
+import { ExternalLink, Github, ArrowUpRight } from 'lucide-react';
+import { projectsData, getCategoryColor } from '@/constants/projects';
 
 export function Projects() {
   return (
@@ -63,9 +63,6 @@ export function Projects() {
                   <h3 className="font-semibold text-gray-900 dark:text-white text-sm line-clamp-1 flex-1">
                     {project.title}
                   </h3>
-                  <span className={`text-xs px-2 py-1 rounded-full font-medium ml-2 ${getStatusColor(project.status)}`}>
-                    {project.status}
-                  </span>
                 </div>
 
                 {/* Description */}
@@ -94,21 +91,8 @@ export function Projects() {
                   )}
                 </div>
 
-                {/* Stats & Links */}
-                <div className="flex items-center justify-between pt-1.5">
-                  {/* Stats */}
-                  <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
-                    <div className="flex items-center gap-1">
-                      <Star size={12} />
-                      <span>{project.stars}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <GitFork size={12} />
-                      <span>{project.forks}</span>
-                    </div>
-                  </div>
-
-                  {/* Links */}
+                {/* Links */}
+                <div className="flex items-center justify-end pt-1.5">
                   <div className="flex items-center gap-2">
                     {project.githubUrl && (
                       <motion.a
@@ -151,12 +135,6 @@ export function Projects() {
                   {projectsData.length}
                 </span>
                 <span>Projects</span>
-              </div>
-              <div>
-                <span className="font-semibold text-lg text-green-600 dark:text-green-400 block">
-                  {projectsData.filter(p => p.status === 'Completed').length}
-                </span>
-                <span>Completed</span>
               </div>
               <div>
                 <span className="font-semibold text-lg text-blue-600 dark:text-blue-400 block">

@@ -1,14 +1,14 @@
 import { tool } from 'ai';
 import { z } from 'zod';
+import { RESUME } from '@/constants/resume';
 
 export const getPresentation = tool({
   description:
-    'This tool returns a concise personal introduction of Raphael Giraud. It is used to answer the question "Who are you?" or "Tell me about yourself"',
+    'Returns a concise personal introduction. Use it to answer "Who are you?" or "Tell me about yourself".',
   parameters: z.object({}),
   execute: async () => {
     return {
-      presentation:
-        "I'm Raphael Giraud, a 21-year-old developer specializing in AI at 42 Paris. Formerly a high-level mountain biker, I now intern at LightOn AI in Paris. I'm passionate about AI, tech, Entrepreneurship and SaaS tech.",
+      presentation: `I'm ${RESUME.name}, a ${RESUME.title.toLowerCase()} based in ${RESUME.location}. ${RESUME.summary}`,
     };
   },
 });

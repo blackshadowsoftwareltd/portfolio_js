@@ -1,4 +1,5 @@
 'use client';
+import { RESUME } from '@/constants/resume';
 import { useChat } from '@ai-sdk/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
@@ -82,24 +83,12 @@ const Avatar = dynamic<AvatarProps>(
             className="relative cursor-pointer"
             onClick={() => (window.location.href = '/')}
           >
-            {isIOS() ? (
-              <img
-                src="/landing-memojis.png"
-                alt="iOS avatar"
-                className="h-full w-full scale-[1.8] object-contain"
-              />
-            ) : (
-              <video
-                ref={videoRef}
-                className="h-full w-full scale-[1.8] object-contain"
-                muted
-                playsInline
-                loop
-              >
-                <source src="/final_memojis.webm" type="video/webm" />
-                <source src="/final_memojis_ios.mp4" type="video/mp4" />
-              </video>
-            )}
+            <div className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-2xl font-semibold text-white">
+              {RESUME.name
+                .split(' ')
+                .map((part) => part[0])
+                .join('')}
+            </div>
           </div>
         </div>
       );
@@ -395,14 +384,6 @@ const Chat = () => {
             />
           </div>
         </div>
-        <a
-          href="https://x.com/toukoumcode"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="fixed right-3 bottom-0 z-10 mb-4 hidden cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-sm hover:underline md:block"
-        >
-          @toukoum
-        </a>
       </div>
     </div>
   );

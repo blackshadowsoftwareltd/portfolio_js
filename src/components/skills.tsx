@@ -3,53 +3,36 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { Code, Cpu, PenTool, Users } from 'lucide-react';
+import {
+  Code,
+  Cpu,
+  Database,
+  Layers,
+  Link2,
+  Radio,
+  Smartphone,
+  Wrench,
+} from 'lucide-react';
+import { RESUME } from '@/constants/resume';
 
 const Skills = () => {
-  const skillsData = [
-    {
-      category: 'Frontend Development',
-      icon: <Code className="h-5 w-5" />,
-      skills: [
-        'HTML',
-        'CSS',
-        'JavaScript/TypeScript',
-        'Tailwind CSS',
-        'Bootstrap',
-        'Next.js',
-        'React',
-        'Vercel AI SDK',
-        'Gsap',
-      ],
-      color: 'bg-blue-50 text-blue-600 border border-blue-200',
-    },
-    {
-      category: 'Backend & Systems',
-      icon: <Cpu className="h-5 w-5" />,
-      skills: ['Unix', 'C', 'C++', 'Python', 'Git', 'GitHub', 'Docker', 'GCP', 'PostgreSQL'],
-      color: 'bg-emerald-50 text-emerald-600 border border-emerald-200',
-    },
-    {
-      category: 'Design & Creative Tools',
-      icon: <PenTool className="h-5 w-5" />,
-      skills: ['Figma', 'Davinci Code', 'Illustrator', 'Canva', 'Keynote'],
-      color: 'bg-indigo-50 text-indigo-600 border border-indigo-200',
-    },
-    {
-      category: 'Soft Skills',
-      icon: <Users className="h-5 w-5" />,
-      skills: [
-        'Communication',
-        'Problem-Solving',
-        'Adaptability',
-        'Learning Agility',
-        'Teamwork',
-        'Creativity',
-        'Focus',
-      ],
-      color: 'bg-amber-50 text-amber-600 border border-amber-200',
-    },
-  ];
+  // Icons are assigned per category so the list stays driven by the CV in
+  // src/constants/resume.ts — add a category there and it renders here.
+  const categoryIcons: Record<string, React.ReactNode> = {
+    Rust: <Cpu className="h-5 w-5" />,
+    'Flutter & Dart': <Smartphone className="h-5 w-5" />,
+    'FFI & Interop': <Link2 className="h-5 w-5" />,
+    Databases: <Database className="h-5 w-5" />,
+    'Real-Time & Networking': <Radio className="h-5 w-5" />,
+    'Cross-Platform': <Layers className="h-5 w-5" />,
+    Tooling: <Wrench className="h-5 w-5" />,
+  };
+
+  const skillsData = RESUME.skills.map((group) => ({
+    category: group.category,
+    icon: categoryIcons[group.category] ?? <Code className="h-5 w-5" />,
+    skills: group.skills,
+  }));
 
   // Animation variants
   const containerVariants = {
@@ -76,7 +59,7 @@ const Skills = () => {
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.3, ease: 'easeOut' },
+      transition: { duration: 0.3, ease: 'easeOut' as const },
     },
   };
 
