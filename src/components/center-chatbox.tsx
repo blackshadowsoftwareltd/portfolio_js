@@ -474,7 +474,7 @@ export default function CenterChatbox() {
               onClick={() => append({ role: 'user', content: query })}
               className="group flex items-center gap-2 overflow-hidden rounded-2xl px-3 py-2"
               style={GLASS_CONTROL}
-              whileHover={{ scale: 1.05, y: -2 }}
+              whileHover={{ y: -2 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             >

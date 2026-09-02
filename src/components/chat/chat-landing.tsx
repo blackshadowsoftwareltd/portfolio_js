@@ -83,7 +83,6 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery }) => {
             className="bg-accent hover:bg-accent/80 flex w-full items-center rounded-lg px-4 py-3 transition-colors"
             onClick={() => submitQuery(question.text)}
             variants={itemVariants}
-            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             <span className="bg-background mr-3 rounded-full p-2">

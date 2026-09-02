@@ -97,7 +97,6 @@ const Tools = () => {
                 : undefined
             }}
             whileHover={{
-              scale: 1.05,
               y: -8,
               boxShadow: `0 20px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px ${tool.color}20`,
               transition: { type: 'spring', stiffness: 400, damping: 25 }

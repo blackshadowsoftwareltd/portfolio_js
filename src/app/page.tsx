@@ -478,7 +478,6 @@ export default function Home() {
             `,
           }}
           whileHover={{
-            scale: 1.02,
             y: -4,
             boxShadow: `
               0 25px 50px rgba(0, 0, 0, 0.25), 
@@ -677,7 +676,6 @@ export default function Home() {
             `,
           }}
           whileHover={{
-            scale: 1.02,
             y: -4,
             boxShadow: `
               0 25px 50px rgba(0, 0, 0, 0.25), 
@@ -774,7 +772,6 @@ export default function Home() {
             `,
           }}
           whileHover={{
-            scale: 1.02,
             y: -4,
             boxShadow: `
               0 25px 50px rgba(0, 0, 0, 0.25), 
@@ -973,7 +970,6 @@ export default function Home() {
             `,
           }}
           whileHover={{
-            scale: 1.02,
             y: -4,
             boxShadow: `
               0 25px 50px rgba(0, 0, 0, 0.25), 
@@ -1030,7 +1026,6 @@ export default function Home() {
             `,
           }}
           whileHover={{
-            scale: 1.02,
             y: -4,
             boxShadow: `
               0 25px 50px rgba(0, 0, 0, 0.25), 

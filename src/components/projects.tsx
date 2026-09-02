@@ -30,7 +30,7 @@ export function Projects() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
               className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-3 border border-gray-200/30 dark:border-gray-700/30 hover:bg-white/70 dark:hover:bg-gray-800/70 transition-all duration-200 group cursor-pointer relative"
-              whileHover={{ scale: 1.02, y: -2 }}
+              whileHover={{ y: -2 }}
             >
               {/* Redirect Button */}
               {(project.demoUrl || project.githubUrl) && (

@@ -83,7 +83,6 @@ export function Contact() {
                     key={social.name}
                     className="rounded-lg border border-gray-200 bg-white/50 px-4 py-2 text-sm font-medium text-gray-700 transition-all hover:bg-white hover:shadow-md dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:bg-gray-800"
                     onClick={() => openLink(social.url)}
-                    whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
                     {social.name}

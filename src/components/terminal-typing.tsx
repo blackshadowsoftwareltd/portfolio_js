@@ -127,7 +127,6 @@ ${PROFILE_DATA.description}`;
           `,
         }}
         whileHover={{
-          scale: 1.02,
           boxShadow: `
             0 12px 40px rgba(0, 0, 0, 0.15),
             0 4px 12px rgba(0, 0, 0, 0.1),
@@ -351,9 +350,6 @@ ${PROFILE_DATA.description}`;
                         damping: 20
                       }}
                       className="group flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/10 border border-white/20 backdrop-blur-sm hover:bg-white/15 hover:border-white/30 transition-all duration-200"
-                      whileHover={{
-                        scale: 1.02
-                      }}
                       whileTap={{ 
                         scale: 0.98
                       }}

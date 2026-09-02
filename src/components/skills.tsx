@@ -108,7 +108,6 @@ const Skills = () => {
                       key={idx}
                       variants={badgeVariants}
                       whileHover={{
-                        scale: 1.04,
                         transition: { duration: 0.2 },
                       }}
                     >
