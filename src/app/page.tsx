@@ -429,10 +429,14 @@ export default function Home() {
       
       {/* GitHub Cards Container */}
       {/* Parked mostly off-screen and revealed on hover, which no touch device
-          can do — so show it in place below the md breakpoint. */}
+          can do — so show it in place below the md breakpoint.
+          Do NOT put overflow-x-hidden on the inner container: overflow-x:hidden
+          coerces overflow-y from visible to auto, turning it into a vertical
+          scroll box that masks the card as it slides up, killing the reveal.
+          Each card clamps its own width instead. */}
       <div className="fixed left-0 right-0 z-10 transform translate-y-0 md:translate-y-[75%]" 
            style={{ bottom: '12px' }}>
-        <div className="p-4 flex gap-4 justify-center items-end max-w-7xl mx-auto overflow-x-hidden">
+        <div className="p-4 flex gap-4 justify-center items-end max-w-7xl mx-auto">
           <GitHubContributions />
         </div>
       </div>

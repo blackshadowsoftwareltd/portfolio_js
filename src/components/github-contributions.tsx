@@ -73,7 +73,7 @@ export default function GitHubContributions() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-fit max-w-[min(56rem,calc(100vw-2rem))] mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30"
+        className="w-fit max-w-[min(56rem,calc(100vw-2rem))] mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30 overflow-hidden"
       >
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
@@ -101,7 +101,7 @@ export default function GitHubContributions() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-fit max-w-[min(56rem,calc(100vw-2rem))] mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30"
+        className="w-fit max-w-[min(56rem,calc(100vw-2rem))] mx-auto p-3 bg-white/10 dark:bg-neutral-800/10 backdrop-blur-[2px] rounded-xl border border-neutral-200/30 dark:border-neutral-700/30 overflow-hidden"
       >
         <div className="text-center">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-white mb-3">

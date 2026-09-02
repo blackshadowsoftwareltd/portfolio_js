@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { Award, Code, GraduationCap, Mail, MessageSquare } from 'lucide-react';
 import React from 'react';
-import { RESUME } from '@/constants/resume';
 
 interface ChatLandingProps {
   submitQuery: (query: string) => void;
@@ -64,10 +63,12 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery }) => {
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <h2 className="mb-3 text-2xl font-semibold">
-          I&apos;m {RESUME.name.split(' ')[0]}&apos;s digital twin
+          Ask me anything
         </h2>
-        <p className="text-muted-foreground mx-auto max-w-md">
-          Ask me anything about my work, my stack, or my experience.
+        <p className="text-muted-foreground mx-auto max-w-md font-mono text-sm">
+          <span className="text-emerald-600 dark:text-emerald-400">$</span> ask
+          --about{' '}
+          <span className="text-foreground">rust,flutter,ffi</span>
         </p>
       </motion.div>
 

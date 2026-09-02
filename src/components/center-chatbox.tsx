@@ -10,6 +10,7 @@ import {
   PartyPopper,
   Plus,
   Sparkles,
+  TerminalSquare,
   Square,
   UserRoundSearch,
 } from 'lucide-react';
@@ -170,16 +171,20 @@ export default function CenterChatbox() {
           className="mb-5 text-center"
         >
           <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 backdrop-blur-md">
-            <Sparkles size={13} className="text-neutral-600 dark:text-neutral-300" />
-            <span className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
-              AI portfolio
+            <TerminalSquare size={13} className="text-neutral-600 dark:text-neutral-300" />
+            <span className="font-mono text-xs font-medium text-neutral-600 dark:text-neutral-300">
+              ~/{PROFILE_DATA.name.split(' ')[0].toLowerCase()}
             </span>
           </div>
           <h1 className="text-2xl font-bold text-neutral-900 sm:text-3xl dark:text-white">
             Ask me anything
           </h1>
-          <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-            Start a conversation with {PROFILE_DATA.name.split(' ')[0]}&apos;s digital twin
+          <p className="mt-1.5 font-mono text-xs text-neutral-600 sm:text-sm dark:text-neutral-400">
+            <span className="text-emerald-600 dark:text-emerald-400">$</span> ask
+            --about{' '}
+            <span className="text-neutral-900 dark:text-neutral-200">
+              rust,flutter,ffi
+            </span>
           </p>
         </motion.div>
       )}
