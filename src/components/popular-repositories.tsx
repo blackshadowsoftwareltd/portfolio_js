@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { StarIcon, GitForkIcon, ExternalLinkIcon, ChevronDownIcon } from 'lucide-react';
+import { RESUME } from '@/constants/resume';
 
 interface Repository {
   name: string;
@@ -72,7 +73,7 @@ export default function PopularRepositories() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: 'RemonAhammad', sortBy }),
+        body: JSON.stringify({ username: RESUME.githubUsername, sortBy }),
       });
 
       if (!response.ok) {
@@ -245,7 +246,7 @@ export default function PopularRepositories() {
             {repositoriesData?.repositories.length || 0} repos
           </span>
           <a
-            href={`https://github.com/RemonAhammad?tab=repositories`}
+            href={`${RESUME.github}?tab=repositories`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"

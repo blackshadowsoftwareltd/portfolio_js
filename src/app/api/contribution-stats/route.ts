@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_USERNAME = 'RemonAhammad';
+import { RESUME } from '@/constants/resume';
+
+const GITHUB_USERNAME = RESUME.githubUsername;
 const GITHUB_GRAPHQL_ENDPOINT = 'https://api.github.com/graphql';
 
 interface RestRepository {

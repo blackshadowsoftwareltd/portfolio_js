@@ -189,9 +189,12 @@ async function fetchRepositoriesWithoutToken(username: string, sortBy: string = 
   } catch (error) {
     console.error('Error fetching from REST API:', error);
     
-    // Generate mock data as final fallback
-    const mockData = generateMockRepositories(username);
-    return NextResponse.json(mockData);
+    // Surface the failure rather than inventing repositories — a portfolio
+    // showing plausible-but-fake repos is worse than one showing an error.
+    return NextResponse.json(
+      { error: 'Failed to fetch repositories from GitHub' },
+      { status: 502 }
+    );
   }
 }
 
@@ -216,51 +219,4 @@ function getLanguageColor(language: string): string {
     'React': '#61dafb',
   };
   return colors[language] || '#586069';
-}
-
-function generateMockRepositories(username: string) {
-  const mockRepos = [
-    {
-      name: 'awesome-project',
-      description: 'A really awesome project built with modern technologies',
-      stargazerCount: 42,
-      forkCount: 12,
-      primaryLanguage: { name: 'TypeScript', color: '#2b7489' },
-      url: `https://github.com/${username}/awesome-project`,
-      createdAt: '2023-01-15T10:30:00Z',
-      updatedAt: '2024-02-20T15:45:00Z',
-    },
-    {
-      name: 'cool-app',
-      description: 'Mobile-first web application with React and Node.js',
-      stargazerCount: 28,
-      forkCount: 8,
-      primaryLanguage: { name: 'JavaScript', color: '#f1e05a' },
-      url: `https://github.com/${username}/cool-app`,
-      createdAt: '2023-03-10T14:20:00Z',
-      updatedAt: '2024-01-18T09:12:00Z',
-    },
-    {
-      name: 'data-visualization',
-      description: 'Interactive data visualization dashboard using D3.js',
-      stargazerCount: 15,
-      forkCount: 5,
-      primaryLanguage: { name: 'Python', color: '#3572A5' },
-      url: `https://github.com/${username}/data-visualization`,
-      createdAt: '2023-05-22T11:15:00Z',
-      updatedAt: '2023-12-05T16:30:00Z',
-    },
-    {
-      name: 'machine-learning-toolkit',
-      description: 'Collection of ML algorithms and tools for data science',
-      stargazerCount: 67,
-      forkCount: 23,
-      primaryLanguage: { name: 'Python', color: '#3572A5' },
-      url: `https://github.com/${username}/machine-learning-toolkit`,
-      createdAt: '2022-11-08T08:45:00Z',
-      updatedAt: '2024-03-01T12:20:00Z',
-    },
-  ];
-
-  return { repositories: mockRepos };
 }

@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { RESUME } from "@/constants/resume";
 import "./globals.css";
 
 // Load Inter font for non-Apple devices
@@ -12,44 +13,39 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const SITE_URL = "https://portfolio.blackshadow.software";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+const SITE_NAME = RESUME.name || "AI Portfolio";
 const SITE_DESCRIPTION =
-  "Interactive AI portfolio for Rimon Ahammad — Flutter and Rust engineer. Ask it anything about my work, stack and experience.";
+  RESUME.summary || "Interactive AI portfolio — ask it anything about my work and experience.";
 
 export const metadata: Metadata = {
-  title: "Rimon Ahammad",
+  title: SITE_NAME,
   description: SITE_DESCRIPTION,
   keywords: [
-    "Rimon Ahammad",
+    SITE_NAME,
     "Portfolio",
     "Software Engineer",
-    "Rust",
-    "Flutter",
-    "Dart",
-    "WebRTC",
-    "FFI",
-    "Full Stack",
     "Next.js",
     "React"
-  ],
+  ].filter(Boolean),
   authors: [
     {
-      name: "Rimon Ahammad",
-      url: "https://github.com/RemonAhammad",
+      name: SITE_NAME,
+      url: RESUME.github,
     },
   ],
-  creator: "Rimon Ahammad",
+  creator: SITE_NAME,
   openGraph: {
     type: "website",
     locale: "en_US",
     url: SITE_URL,
-    title: "Rimon Ahammad",
+    title: SITE_NAME,
     description: SITE_DESCRIPTION,
-    siteName: "Rimon Ahammad",
+    siteName: SITE_NAME,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rimon Ahammad",
+    title: SITE_NAME,
     description: SITE_DESCRIPTION,
   },
   icons: {
@@ -60,7 +56,6 @@ export const metadata: Metadata = {
       }
     ],
     shortcut: "/blackshadow.svg?v=2",
-    apple: "/apple-touch-icon.svg?v=2",
   },
 };
 

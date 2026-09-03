@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Award, Code, GraduationCap, Mail, MessageSquare } from 'lucide-react';
 import React from 'react';
+import { RESUME } from '@/constants/resume';
 
 interface ChatLandingProps {
   submitQuery: (query: string) => void;
@@ -68,7 +69,7 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery }) => {
         <p className="text-muted-foreground mx-auto max-w-md font-mono text-sm">
           <span className="text-emerald-600 dark:text-emerald-400">$</span> ask
           --about{' '}
-          <span className="text-foreground">rust,flutter,ffi</span>
+          <span className="text-foreground">{RESUME.tags.slice(0, 3).join(',').toLowerCase()}</span>
         </p>
       </motion.div>
 

@@ -144,7 +144,7 @@ export default function OpenSourceContributions() {
           Open Source Contributions
         </h2>
         <p className="text-neutral-600 dark:text-neutral-400">
-          My journey in open source development and community contributions
+          
         </p>
       </div>
 

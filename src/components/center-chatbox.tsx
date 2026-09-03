@@ -17,6 +17,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 
 import { PROFILE_DATA } from '@/constants/profile';
+import { RESUME } from '@/constants/resume';
 
 /* ---------- suggestion chips ---------- */
 const SUGGESTIONS = [
@@ -37,12 +38,6 @@ const SUGGESTIONS = [
     color: '#856ED9',
     icon: Layers,
     query: 'What are your skills? Give me a list of your soft and hard skills.',
-  },
-  {
-    key: 'Fun',
-    color: '#B95F9D',
-    icon: PartyPopper,
-    query: 'What is the craziest thing you have ever done? What are your hobbies?',
   },
   {
     key: 'Contact',
@@ -183,7 +178,7 @@ export default function CenterChatbox() {
             <span className="text-emerald-600 dark:text-emerald-400">$</span> ask
             --about{' '}
             <span className="text-neutral-900 dark:text-neutral-200">
-              rust,flutter,ffi
+              {RESUME.tags.slice(0, 3).join(',').toLowerCase()}
             </span>
           </p>
         </motion.div>

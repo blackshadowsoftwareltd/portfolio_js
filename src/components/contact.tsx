@@ -67,9 +67,6 @@ export function Contact() {
             {/* Email Section */}
             <div className="mt-4 flex flex-col md:mt-5">
               <div className="mb-3">
-                <p className="text-muted-foreground mb-2 text-sm">
-                  I'm always interested in new opportunities and collaborations. Feel free to reach out!
-                </p>
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-muted-foreground">Email:</span>
                   <span className="font-medium">{PROFILE_DATA.email}</span>

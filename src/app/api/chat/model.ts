@@ -15,7 +15,11 @@ import { createOpenAI, openai } from '@ai-sdk/openai';
  */
 
 export const DEFAULT_OLLAMA_BASE_URL = 'http://localhost:11434/v1';
-export const DEFAULT_OLLAMA_MODEL = 'qwen2.5:1.5b';
+// qwen2.5:3b, not 1.5b: the 1.5B model cannot hold a negative constraint and
+// invents an age and a date of birth when asked, despite the prompt forbidding it.
+// 3b refuses correctly and costs ~1s per reply. Stay in the qwen2 family — on this
+// Ollama build, llama-family models are rejected with "does not support chat".
+export const DEFAULT_OLLAMA_MODEL = 'qwen2.5:3b';
 
 export const LLM_PROVIDER = (process.env.LLM_PROVIDER ?? 'ollama').toLowerCase();
 export const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL ?? DEFAULT_OLLAMA_BASE_URL;

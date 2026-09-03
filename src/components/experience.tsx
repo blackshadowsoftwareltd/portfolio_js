@@ -169,9 +169,6 @@ export default function Experience() {
           variants={itemVariants}
           className="text-center pt-8 border-t border-gray-200 dark:border-gray-700"
         >
-          <p className="text-gray-600 dark:text-gray-400 text-sm">
-            Want to know more about my experience? Feel free to reach out!
-          </p>
         </motion.div>
       </motion.div>
     </div>

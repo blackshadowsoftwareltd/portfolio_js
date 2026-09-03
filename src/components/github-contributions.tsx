@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { RESUME } from '@/constants/resume';
 
 interface ContributionDay {
   date: string;
@@ -18,7 +19,7 @@ interface ContributionsData {
   weeks: ContributionWeek[];
 }
 
-const GITHUB_USERNAME = 'RemonAhammad';
+const GITHUB_USERNAME = RESUME.githubUsername;
 
 const getContributionLevel = (count: number): string => {
   if (count === 0) return 'bg-neutral-100 dark:bg-neutral-800 blur-[0.5px] opacity-60';

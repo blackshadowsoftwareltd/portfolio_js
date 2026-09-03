@@ -12,7 +12,6 @@ import Projects from '@/components/projects';
 import Experience from '@/components/experience';
 import OpenSourceContributions from '@/components/open-source-contributions';
 import { Button } from '@/components/ui/button';
-import WelcomeModal from '@/components/welcome-modal';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -33,6 +32,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import GitHubButton from 'react-github-btn';
+import { RESUME } from '@/constants/resume';
 
 /* ---------- quick-question data ---------- */
 const questions = {
@@ -189,18 +189,6 @@ export default function Home() {
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pb-10 md:pb-20" suppressHydrationWarning={true}>
-      {/* GitHub button */}
-      {/* <div className="absolute top-6 right-8 z-20">
-        <GitHubButton
-          href="https://github.com/RemonAhammad/portfolio_js"
-          data-color-scheme="no-preference: light; light: light; dark: light_high_contrast;"
-          data-size="large"
-          data-show-count="true"
-          aria-label="Star RemonAhammad/portfolio_js on GitHub"
-        >
-          Star
-        </GitHubButton>
-      </div> */}
 
       {/* <div className="absolute top-6 left-6 z-20">
         <button
@@ -270,7 +258,7 @@ export default function Home() {
       <LiquidGlassButton />
       
       {/* Terminal Typing Animation */}
-      <TerminalTyping name="Rimon Ahammad" />
+      <TerminalTyping name={RESUME.name} />
 
       {/* Centered conversation starter */}
       <CenterChatbox />

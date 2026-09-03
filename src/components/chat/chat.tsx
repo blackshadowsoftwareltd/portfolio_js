@@ -16,10 +16,6 @@ import {
   ChatBubble,
   ChatBubbleMessage,
 } from '@/components/ui/chat/chat-bubble';
-import WelcomeModal from '@/components/welcome-modal';
-import { Info } from 'lucide-react';
-import GitHubButton from 'react-github-btn';
-// import HelperBoost from './HelperBoost';
 
 // ClientOnly component for client-side rendering
 //@ts-ignore
@@ -265,26 +261,6 @@ const Chat = () => {
 
   return (
     <div className="relative h-screen overflow-hidden">
-      <div className="absolute top-6 right-8 z-51 flex flex-col-reverse items-center justify-center gap-1 md:flex-row">
-        <WelcomeModal
-          trigger={
-            <div className="hover:bg-accent cursor-pointer rounded-2xl px-3 py-1.5">
-              <Info className="text-accent-foreground h-8" />
-            </div>
-          }
-        />
-        <div className="pt-2">
-          <GitHubButton
-            href="https://github.com/RemonAhammad/portfolio_js"
-            data-color-scheme="no-preference: light; light: light; dark: light_high_contrast;"
-            data-size="large"
-            data-show-count="true"
-            aria-label="Star RemonAhammad/portfolio_js on GitHub"
-          >
-            Star
-          </GitHubButton>
-        </div>
-      </div>
 
       {/* Fixed Avatar Header with Gradient */}
       <div
@@ -373,7 +349,6 @@ const Chat = () => {
         {/* Fixed Bottom Bar */}
         <div className="sticky bottom-0 bg-white px-2 pt-3 md:px-0 md:pb-4">
           <div className="relative flex flex-col items-center gap-3">
-            {/* <HelperBoost submitQuery={submitQuery} setInput={setInput} /> */}
             <ChatBottombar
               input={input}
               handleInputChange={handleInputChange}

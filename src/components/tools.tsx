@@ -34,7 +34,7 @@ const Tools = () => {
           Developer Tools
         </h2>
         <p className="text-gray-600 dark:text-gray-400">
-          Tools I use daily to build amazing things
+          
         </p>
       </motion.div>
 

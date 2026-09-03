@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_USERNAME = 'RemonAhammad';
+import { RESUME } from '@/constants/resume';
+
+const GITHUB_USERNAME = RESUME.githubUsername;
 
 interface GitHubRepository {
   name: string;
@@ -75,27 +77,9 @@ export async function POST(request: NextRequest) {
       }))
       .sort((a, b) => b.stars - a.stars); // Sort by stars
 
-    // Add some highlighted projects with enhanced descriptions
-    const enhancedProjects = openSourceProjects.map(project => {
-      // Special handling for known projects
-      if (project.name === 'animation_search_bar') {
-        return {
-          ...project,
-          description: 'A beautiful, customizable animated search bar widget for Flutter applications with extensive styling options and smooth animations.',
-          topics: [...project.topics, 'flutter', 'animation', 'search', 'ui-components', 'dart-package'].filter((topic, index, arr) => arr.indexOf(topic) === index)
-        };
-      }
-      
-      if (project.name === 'portfolio_js') {
-        return {
-          ...project,
-          description: 'Modern, interactive portfolio website built with Next.js, featuring AI-powered chat, dynamic GitHub integration, and stunning glass morphism UI.',
-          topics: [...project.topics, 'nextjs', 'portfolio', 'react', 'typescript', 'ai', 'glassmorphism'].filter((topic, index, arr) => arr.indexOf(topic) === index)
-        };
-      }
-
-      return project;
-    });
+    // Descriptions and topics come from GitHub as-is. Two hardcoded overrides for
+    // specific repo names used to replace them here; they were invented copy.
+    const enhancedProjects = openSourceProjects;
 
     const result = {
       projects: enhancedProjects,

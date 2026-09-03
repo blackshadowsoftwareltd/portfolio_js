@@ -116,9 +116,11 @@ async function fetchContributionsWithoutToken(username: string) {
   } catch (error) {
     console.error('Error fetching from public API:', error);
     
-    // Generate mock data as final fallback
-    const mockData = generateMockContributions();
-    return NextResponse.json(mockData);
+    // Surface the failure rather than generating a random heatmap.
+    return NextResponse.json(
+      { error: 'Failed to fetch contributions from GitHub' },
+      { status: 502 }
+    );
   }
 }
 
@@ -172,46 +174,4 @@ function transformContributionsToWeeks(contributions: any[]) {
   }
 
   return weeks;
-}
-
-function generateMockContributions() {
-  const weeks = [];
-  const today = new Date();
-  const oneYearAgo = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
-  
-  let currentDate = new Date(oneYearAgo);
-  let totalContributions = 0;
-
-  // Start from the first Sunday of the year
-  const firstSunday = new Date(currentDate);
-  firstSunday.setDate(currentDate.getDate() - currentDate.getDay());
-  currentDate = firstSunday;
-
-  while (currentDate <= today) {
-    const week = [];
-    
-    for (let day = 0; day < 7; day++) {
-      if (currentDate <= today) {
-        const count = Math.random() > 0.7 ? Math.floor(Math.random() * 15) : 0;
-        totalContributions += count;
-        
-        week.push({
-          contributionCount: count,
-          date: currentDate.toISOString().split('T')[0],
-          color: getContributionColor(count),
-        });
-      }
-      
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-    
-    if (week.length > 0) {
-      weeks.push({ contributionDays: week });
-    }
-  }
-
-  return {
-    totalContributions,
-    weeks,
-  };
 }
