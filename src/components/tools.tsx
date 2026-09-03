@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { toolsData, toolCategories, Tool } from '@/constants/tools';
-import { ExternalLink, Filter } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 
 const Tools = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -22,10 +22,10 @@ const Tools = () => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4 sm:p-6">
+    <div className="w-full max-w-6xl mx-auto p-3 sm:p-4">
       {/* Header */}
       <motion.div 
-        className="text-center mb-8"
+        className="text-center mb-5"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -33,14 +33,11 @@ const Tools = () => {
         <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           Developer Tools
         </h2>
-        <p className="text-gray-600 dark:text-gray-400">
-          
-        </p>
       </motion.div>
 
       {/* Category Filter */}
       <motion.div 
-        className="flex flex-wrap justify-center gap-2 mb-8"
+        className="flex flex-wrap justify-center gap-1.5 mb-5"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
@@ -49,23 +46,25 @@ const Tools = () => {
           <button
             key={category}
             onClick={() => setSelectedCategory(category)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+            className={`whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium transition-all duration-200 ${
               selectedCategory === category
                 ? 'bg-blue-500 text-white shadow-lg scale-105'
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
             }`}
           >
-            <div className="flex items-center gap-1.5">
-              <Filter size={12} />
-              {category}
-            </div>
+            {category}
+            <span className="ml-1.5 opacity-60 tabular-nums">
+              {category === 'All'
+                ? toolsData.length
+                : toolsData.filter((t) => t.category === category).length}
+            </span>
           </button>
         ))}
       </motion.div>
 
       {/* Tools Grid */}
       <motion.div 
-        className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4"
+        className="grid items-stretch gap-3 [grid-template-columns:repeat(auto-fill,minmax(9.5rem,1fr))]"
         layout
       >
         {filteredTools.map((tool, index) => (
@@ -86,7 +85,7 @@ const Tools = () => {
             onHoverEnd={() => setHoveredTool(null)}
             onClick={() => handleToolClick(tool)}
             className={`
-              relative overflow-hidden rounded-2xl p-6 cursor-pointer
+              relative flex h-full flex-col overflow-hidden rounded-2xl p-4 cursor-pointer
               bg-white/80 dark:bg-gray-800/80 
               backdrop-blur-sm border border-gray-200 dark:border-gray-700
               ${tool.website ? 'hover:border-blue-300 dark:hover:border-blue-500' : ''}
@@ -108,11 +107,11 @@ const Tools = () => {
           >
             {/* Tool Icon */}
             <motion.div 
-              className="text-4xl mb-4"
+              className="mb-2 text-2xl leading-none"
               animate={{ 
-                scale: hoveredTool === tool.id ? 1.3 : 1,
-                rotate: hoveredTool === tool.id ? 12 : 0,
-                y: hoveredTool === tool.id ? -4 : 0
+                scale: hoveredTool === tool.id ? 1.15 : 1,
+                rotate: hoveredTool === tool.id ? 8 : 0,
+                y: hoveredTool === tool.id ? -2 : 0
               }}
               transition={{ type: 'spring', stiffness: 400, damping: 20 }}
             >
@@ -120,40 +119,42 @@ const Tools = () => {
             </motion.div>
 
             {/* Tool Info */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-gray-900 dark:text-white">
+            <div className="relative z-10 flex min-w-0 flex-1 flex-col">
+              <div className="flex min-w-0 items-start gap-1.5">
+                <h3 className="min-w-0 flex-1 truncate text-sm font-semibold text-gray-900 dark:text-white">
                   {tool.name}
                 </h3>
                 {tool.website && (
                   <motion.div
+                    className="mt-0.5 shrink-0"
                     animate={{ 
                       scale: hoveredTool === tool.id ? 1.1 : 1,
-                      opacity: hoveredTool === tool.id ? 1 : 0.6
+                      opacity: hoveredTool === tool.id ? 1 : 0.45
                     }}
                     transition={{ duration: 0.2 }}
                   >
-                    <ExternalLink size={16} className="text-gray-500 dark:text-gray-400" />
+                    <ExternalLink size={13} className="text-gray-500 dark:text-gray-400" />
                   </motion.div>
                 )}
               </div>
-              
-              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+
+              <p className="mt-1 line-clamp-3 flex-1 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
                 {tool.description}
               </p>
-              
-              <div className="flex items-center justify-between">
-                <span 
-                  className="text-xs px-2 py-1 rounded-full font-medium"
-                  style={{
-                    backgroundColor: `${tool.color}20`,
-                    color: tool.color,
-                    border: `1px solid ${tool.color}30`
-                  }}
-                >
-                  {tool.category}
-                </span>
-              </div>
+
+              <span
+                className="mt-2.5 w-fit max-w-full truncate rounded-full px-2 py-0.5 text-[10px] font-medium whitespace-nowrap"
+                style={{
+                  backgroundColor: `${tool.color}22`,
+                  // The raw brand hex is often too dark to read on the dark card
+                  // (e.g. Assembly #6E4C13). Mix it toward white so every pill
+                  // keeps its identity and stays legible.
+                  color: `color-mix(in srgb, ${tool.color} 55%, white)`,
+                  border: `1px solid ${tool.color}45`
+                }}
+              >
+                {tool.category}
+              </span>
             </div>
 
             {/* Animated Background Particles */}
