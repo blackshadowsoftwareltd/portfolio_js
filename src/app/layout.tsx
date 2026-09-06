@@ -4,6 +4,8 @@ import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import SplashScreen from "@/components/splash-screen";
+import { SPLASH_FREQUENCY, SPLASH_SESSION_KEY } from "@/constants/splash";
 import { RESUME } from "@/constants/resume";
 import "./globals.css";
 
@@ -69,6 +71,17 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="icon" href="/blackshadow.svg" sizes="any" />
+        {/* Runs before first paint: if the splash was already shown this session,
+            hide the SSR markup so it never flashes and gets torn down at hydration.
+            Only emitted when SPLASH_FREQUENCY is 'session' — otherwise it would
+            suppress a splash that is meant to play on every load. */}
+        {SPLASH_FREQUENCY === "session" && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `try{if(sessionStorage.getItem('${SPLASH_SESSION_KEY}')==='1'){document.documentElement.dataset.splash='off'}}catch(e){}`,
+            }}
+          />
+        )}
       </head>
       <body
         className={cn(
@@ -82,6 +95,7 @@ export default function RootLayout({
           defaultTheme="dark"
           enableSystem={false}
         >
+          <SplashScreen />
           <main className="flex min-h-screen flex-col">
             {children}
           </main>

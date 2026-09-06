@@ -154,3 +154,8 @@ pre {
   word-wrap: normal;
   overflow-x: auto;
 }
+/* Splash: hidden before first paint for repeat visits this session. The inline
+   script in layout.tsx sets the attribute; this rule does the hiding. */
+html[data-splash='off'] #splash {
+  display: none !important;
+}
